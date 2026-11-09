@@ -477,6 +477,29 @@ class DiwaliAudioEngine {
       }, 120);
     }
   }
+
+  // 11. SKY KANDIL (WARM SERENE TONE)
+  playKandilSound() {
+    this.ensureContext();
+    if (!this.ctx || this.isMuted) return;
+
+    const now = this.ctx.currentTime;
+    const osc = this.ctx.createOscillator();
+    const gain = this.ctx.createGain();
+    osc.type = 'sine';
+    osc.frequency.setValueAtTime(440, now);
+    osc.frequency.exponentialRampToValueAtTime(880, now + 1.2);
+
+    gain.gain.setValueAtTime(0.001, now);
+    gain.gain.linearRampToValueAtTime(0.12, now + 0.3);
+    gain.gain.exponentialRampToValueAtTime(0.001, now + 1.8);
+
+    osc.connect(gain);
+    gain.connect(this.masterGain);
+    gain.connect(this.reverbNode);
+    osc.start(now);
+    osc.stop(now + 1.9);
+  }
 }
 
 export const soundManager = new DiwaliAudioEngine();

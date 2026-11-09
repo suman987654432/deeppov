@@ -534,6 +534,365 @@ class SkyStar {
   }
 }
 
+// 10. SAANP KI GOLI (GROWING BLACK CARBON SNAKE)
+class SnakeGoli {
+  constructor(x, y) {
+    this.x = x;
+    this.y = y;
+    this.life = 280;
+    this.isDead = false;
+    this.segments = [{ x, y, r: 8, angle: 0 }];
+    this.growTimer = 0;
+    this.growthAngle = -Math.PI / 2;
+    soundManager.playSnakeHiss();
+    triggerHaptic([30, 40, 30, 40]);
+  }
+
+  update(particlesRef, speedMultiplier = 1) {
+    this.life -= speedMultiplier;
+    if (this.life <= 0) {
+      this.isDead = true;
+      return;
+    }
+
+    if (this.segments.length < 52) {
+      this.growTimer += speedMultiplier;
+      if (this.growTimer >= 2.6) {
+        this.growTimer = 0;
+        const head = this.segments[this.segments.length - 1];
+        this.growthAngle += (Math.random() - 0.5) * 0.85;
+        const step = 4.2;
+        const nx = head.x + Math.cos(this.growthAngle) * step;
+        const ny = head.y + Math.sin(this.growthAngle) * step - 1.2;
+        const radius = Math.max(4.5, 8.5 - this.segments.length * 0.08);
+        this.segments.push({ x: nx, y: ny, r: radius, angle: this.growthAngle });
+
+        if (Math.random() > 0.4) {
+          particlesRef.push(
+            new Particle(nx, ny, (Math.random() - 0.5) * 0.8, -1.0 - Math.random() * 0.8, '#57534e', {
+              decay: 0.02,
+              radius: 4 + Math.random() * 3,
+              gravity: -0.01,
+            })
+          );
+        }
+      }
+
+      const tip = this.segments[this.segments.length - 1];
+      for (let i = 0; i < 2; i++) {
+        const a = Math.random() * Math.PI * 2;
+        const spd = 0.5 + Math.random() * 1.5;
+        particlesRef.push(
+          new Particle(tip.x, tip.y, Math.cos(a) * spd, Math.sin(a) * spd, '#ff4500', {
+            decay: 0.06,
+            radius: 1.4,
+            gravity: 0.02,
+          })
+        );
+      }
+    }
+  }
+
+  draw(ctx) {
+    ctx.save();
+    const alpha = Math.min(1.0, this.life / 30);
+    ctx.globalAlpha = alpha;
+
+    ctx.beginPath();
+    ctx.ellipse(this.x, this.y, 11, 6, 0, 0, Math.PI * 2);
+    ctx.fillStyle = '#1c1917';
+    ctx.fill();
+    ctx.strokeStyle = '#f97316';
+    ctx.lineWidth = 1.2;
+    ctx.stroke();
+
+    for (let i = 0; i < this.segments.length; i++) {
+      const seg = this.segments[i];
+      ctx.beginPath();
+      ctx.arc(seg.x, seg.y, seg.r, 0, Math.PI * 2);
+      ctx.fillStyle = i % 2 === 0 ? '#292524' : '#1c1917';
+      ctx.fill();
+
+      if (i > this.segments.length - 6) {
+        ctx.strokeStyle = '#ff6b00';
+        ctx.lineWidth = 1.8;
+        ctx.shadowColor = '#ff4500';
+        ctx.shadowBlur = 10;
+        ctx.stroke();
+        ctx.shadowBlur = 0;
+      }
+    }
+
+    ctx.restore();
+  }
+}
+
+// 11. BIJLI CRACKER CLUSTER
+class BijliCluster {
+  constructor(x, y, onTriggerFlash) {
+    this.x = x;
+    this.y = y;
+    this.life = 70;
+    this.isDead = false;
+    this.onTriggerFlash = onTriggerFlash;
+    this.popTimer = 0;
+    this.popCount = 0;
+    this.maxPops = 14;
+    soundManager.playBijliSnap();
+    triggerHaptic([20, 20, 20]);
+  }
+
+  update(particlesRef, speedMultiplier = 1) {
+    this.life -= speedMultiplier;
+    this.popTimer += speedMultiplier;
+
+    if (this.popCount < this.maxPops && this.popTimer >= 3.6) {
+      this.popTimer = 0;
+      this.popCount++;
+
+      const px = this.x + (Math.random() - 0.5) * 65;
+      const py = this.y + (Math.random() - 0.5) * 65;
+
+      if (this.onTriggerFlash) {
+        this.onTriggerFlash(px, py, '#ffffff', 0.45, 130);
+      }
+
+      for (let i = 0; i < 14; i++) {
+        const a = Math.random() * Math.PI * 2;
+        const spd = 2.5 + Math.random() * 5.0;
+        const colors = ['#ffffff', '#ffd700', '#ef4444', '#f97316'];
+        particlesRef.push(
+          new Particle(px, py, Math.cos(a) * spd, Math.sin(a) * spd, colors[Math.floor(Math.random() * colors.length)], {
+            decay: 0.045,
+            radius: 1.6,
+            gravity: 0.06,
+            twinkle: true,
+          })
+        );
+      }
+    }
+
+    if (this.life <= 0 && this.popCount >= this.maxPops) {
+      this.isDead = true;
+    }
+  }
+
+  draw(ctx) {
+    ctx.save();
+    ctx.beginPath();
+    ctx.arc(this.x, this.y, 7, 0, Math.PI * 2);
+    ctx.fillStyle = '#dc2626';
+    ctx.fill();
+    ctx.restore();
+  }
+}
+
+// 12. MAGIC HUNTER TUBE (MULTI-SHOT REPEATER)
+class MagicHunterTube {
+  constructor(x, y, onShootComet) {
+    this.x = x;
+    this.y = y;
+    this.shotsFired = 0;
+    this.totalShots = 8;
+    this.timer = 0;
+    this.interval = 14;
+    this.isDead = false;
+    this.onShootComet = onShootComet;
+    triggerHaptic(40);
+  }
+
+  update(particlesRef, speedMultiplier = 1) {
+    this.timer += speedMultiplier;
+    if (this.shotsFired < this.totalShots && this.timer >= this.interval) {
+      this.timer = 0;
+      this.shotsFired++;
+      this.onShootComet(this.x, this.y, this.shotsFired);
+      soundManager.playHunterShot();
+      triggerHaptic(25);
+
+      for (let i = 0; i < 8; i++) {
+        const a = -Math.PI / 2 + (Math.random() - 0.5) * 0.7;
+        const spd = 3 + Math.random() * 4;
+        particlesRef.push(
+          new Particle(this.x, this.y - 20, Math.cos(a) * spd, Math.sin(a) * spd, '#ffd700', {
+            decay: 0.07,
+            radius: 1.8,
+            gravity: 0.04,
+          })
+        );
+      }
+    }
+
+    if (this.shotsFired >= this.totalShots && this.timer > 30) {
+      this.isDead = true;
+    }
+  }
+
+  draw(ctx) {
+    ctx.save();
+    ctx.beginPath();
+    ctx.rect(this.x - 5, this.y - 22, 10, 26);
+    ctx.fillStyle = '#eab308';
+    ctx.fill();
+    ctx.strokeStyle = '#ca8a04';
+    ctx.lineWidth = 1.5;
+    ctx.stroke();
+
+    ctx.beginPath();
+    ctx.ellipse(this.x, this.y - 22, 5, 2.5, 0, 0, Math.PI * 2);
+    ctx.fillStyle = '#fef08a';
+    ctx.shadowColor = '#f59e0b';
+    ctx.shadowBlur = 12;
+    ctx.fill();
+    ctx.restore();
+  }
+}
+
+// 13. HUNTER COMET
+class HunterComet {
+  constructor(x, y, targetX, targetY, color, onExplode) {
+    this.x = x;
+    this.y = y;
+    this.startX = x;
+    this.startY = y;
+    this.targetX = targetX;
+    this.targetY = targetY;
+    this.color = color;
+    this.onExplode = onExplode;
+    this.trail = [];
+    this.exploded = false;
+
+    const angle = Math.atan2(targetY - y, targetX - x);
+    this.speed = 18 + Math.random() * 3;
+    this.vx = Math.cos(angle) * this.speed;
+    this.vy = Math.sin(angle) * this.speed;
+    this.distanceTotal = Math.hypot(targetX - x, targetY - y);
+  }
+
+  update(speedMultiplier = 1) {
+    this.trail.push({ x: this.x, y: this.y });
+    if (this.trail.length > 7) this.trail.shift();
+
+    this.x += this.vx * speedMultiplier;
+    this.y += this.vy * speedMultiplier;
+
+    const dist = Math.hypot(this.x - this.startX, this.y - this.startY);
+    if (dist >= this.distanceTotal || this.y <= this.targetY) {
+      this.exploded = true;
+      this.onExplode(this.targetX, this.targetY, this.color);
+    }
+  }
+
+  draw(ctx) {
+    if (this.trail.length > 1) {
+      ctx.beginPath();
+      ctx.moveTo(this.trail[0].x, this.trail[0].y);
+      for (let i = 1; i < this.trail.length; i++) {
+        ctx.lineTo(this.trail[i].x, this.trail[i].y);
+      }
+      ctx.strokeStyle = this.color;
+      ctx.lineWidth = 3.5;
+      ctx.stroke();
+    }
+
+    ctx.beginPath();
+    ctx.arc(this.x, this.y, 4.5, 0, Math.PI * 2);
+    ctx.fillStyle = '#ffffff';
+    ctx.shadowColor = this.color;
+    ctx.shadowBlur = 18;
+    ctx.fill();
+    ctx.shadowBlur = 0;
+  }
+}
+
+// 14. SKY KANDIL LANTERN
+class SkyKandilLantern {
+  constructor(x, y) {
+    this.x = x;
+    this.y = y;
+    this.vy = -(1.2 + Math.random() * 0.7);
+    this.life = 500;
+    this.isDead = false;
+    this.swayPhase = Math.random() * Math.PI * 2;
+    this.flameFlicker = 0;
+    this.color = ['#f59e0b', '#f97316', '#ef4444', '#ec4899', '#eab308'][Math.floor(Math.random() * 5)];
+    soundManager.playKandilSound();
+    triggerHaptic(30);
+  }
+
+  update(particlesRef, speedMultiplier = 1) {
+    this.life -= speedMultiplier;
+    this.swayPhase += 0.035 * speedMultiplier;
+    this.flameFlicker += 0.25 * speedMultiplier;
+
+    this.x += Math.sin(this.swayPhase) * 0.65 * speedMultiplier;
+    this.y += this.vy * speedMultiplier;
+
+    if (this.life <= 0 || this.y < -80) {
+      this.isDead = true;
+    }
+
+    if (Math.random() > 0.8) {
+      particlesRef.push(
+        new Particle(this.x + (Math.random() - 0.5) * 8, this.y + 12, (Math.random() - 0.5) * 0.3, 0.4, '#ffd700', {
+          decay: 0.05,
+          radius: 1.2,
+          gravity: 0.01,
+        })
+      );
+    }
+  }
+
+  draw(ctx) {
+    ctx.save();
+    const alpha = Math.min(1.0, this.life / 40);
+    ctx.globalAlpha = alpha;
+
+    const flicker = Math.sin(this.flameFlicker) * 2;
+
+    ctx.beginPath();
+    ctx.arc(this.x, this.y, 24 + flicker, 0, Math.PI * 2);
+    ctx.fillStyle = 'rgba(245, 158, 11, 0.18)';
+    ctx.shadowColor = '#f59e0b';
+    ctx.shadowBlur = 25;
+    ctx.fill();
+
+    ctx.beginPath();
+    ctx.moveTo(this.x, this.y - 18);
+    ctx.lineTo(this.x + 14, this.y - 4);
+    ctx.lineTo(this.x + 10, this.y + 14);
+    ctx.lineTo(this.x - 10, this.y + 14);
+    ctx.lineTo(this.x - 14, this.y - 4);
+    ctx.closePath();
+    ctx.fillStyle = this.color;
+    ctx.globalAlpha = alpha * 0.85;
+    ctx.fill();
+    ctx.strokeStyle = '#ffd700';
+    ctx.lineWidth = 1.2;
+    ctx.stroke();
+
+    ctx.beginPath();
+    ctx.arc(this.x, this.y + 2, 4.5 + flicker * 0.5, 0, Math.PI * 2);
+    ctx.fillStyle = '#ffffff';
+    ctx.shadowColor = '#ffffff';
+    ctx.shadowBlur = 15;
+    ctx.fill();
+
+    ctx.beginPath();
+    ctx.moveTo(this.x - 6, this.y + 14);
+    ctx.lineTo(this.x - 6 + Math.sin(this.swayPhase) * 2, this.y + 24);
+    ctx.moveTo(this.x, this.y + 14);
+    ctx.lineTo(this.x + Math.sin(this.swayPhase) * 2, this.y + 26);
+    ctx.moveTo(this.x + 6, this.y + 14);
+    ctx.lineTo(this.x + 6 + Math.sin(this.swayPhase) * 2, this.y + 24);
+    ctx.strokeStyle = '#fef08a';
+    ctx.lineWidth = 1.5;
+    ctx.stroke();
+
+    ctx.restore();
+  }
+}
+
 const FireworksCanvas = forwardRef(
   (
     {
@@ -876,20 +1235,41 @@ const FireworksCanvas = forwardRef(
       };
     }, [autoPlay, launchRocket, selectedPattern, speedMultiplier]);
 
-    // Handle touch/click point
+    // Shoot Hunter comet upwards
+    const shootHunterComet = useCallback(
+      (startX, startY, shotIndex) => {
+        const colors = ['#ef4444', '#10b981', '#3b82f6', '#f59e0b', '#a855f7', '#ffd700', '#ec4899', '#ffffff'];
+        const color = colors[shotIndex % colors.length];
+        const targetX = startX + (Math.random() - 0.5) * 260;
+        const targetY = window.innerHeight * 0.12 + Math.random() * (window.innerHeight * 0.28);
+        rocketsRef.current.push(
+          new HunterComet(startX, startY - 20, targetX, targetY, color, (ex, ey, c) => {
+            triggerSkyFlash(ex, ey, c, 0.45, 180);
+            soundManager.playExplosion(0, 0.5);
+            triggerHaptic(20);
+            for (let i = 0; i < 35; i++) {
+              const a = Math.random() * Math.PI * 2;
+              const spd = 2.0 + Math.random() * 4.0;
+              particlesRef.current.push(
+                new Particle(ex, ey, Math.cos(a) * spd, Math.sin(a) * spd, c, {
+                  decay: 0.03,
+                  radius: 1.8,
+                  gravity: 0.05,
+                  twinkle: true,
+                })
+              );
+            }
+          })
+        );
+      },
+      [triggerSkyFlash]
+    );
+
+    // Handle touch/click point for ALL 10 AUTHENTIC CRACKERS
     const handleTriggerPoint = (x, y) => {
       if (onInteraction) onInteraction();
 
-      if (crackerType === 'rambaan') {
-        // Launch Lord Ram's Arrow of Light from bottom
-        const startX = window.innerWidth / 2;
-        const startY = window.innerHeight + 10;
-        specialCrackersRef.current.push(new RamBaan(startX, startY, x, y, explodeRamBaan));
-      } else if (crackerType === 'diya') {
-        // Spawn Floating Water Diya
-        specialCrackersRef.current.push(new WaterDiya(x, y));
-        soundManager.playExplosion(0, 0.4);
-      } else if (crackerType === 'anaar') {
+      if (crackerType === 'anaar') {
         specialCrackersRef.current.push(new AnaarFountain(x, y));
       } else if (crackerType === 'chakri') {
         specialCrackersRef.current.push(new GroundChakri(x, y));
@@ -900,14 +1280,30 @@ const FireworksCanvas = forwardRef(
       } else if (crackerType === 'sparkler') {
         sparklerPosRef.current = { x, y };
         soundManager.startSparklerSound();
+      } else if (crackerType === 'snake') {
+        specialCrackersRef.current.push(new SnakeGoli(x, y));
+      } else if (crackerType === 'bijli') {
+        specialCrackersRef.current.push(new BijliCluster(x, y, triggerSkyFlash));
+      } else if (crackerType === 'hunter') {
+        specialCrackersRef.current.push(new MagicHunterTube(x, y, shootHunterComet));
+      } else if (crackerType === 'kandil') {
+        specialCrackersRef.current.push(new SkyKandilLantern(x, y));
+      } else if (crackerType === 'rambaan') {
+        const startX = window.innerWidth / 2;
+        const startY = window.innerHeight + 10;
+        specialCrackersRef.current.push(new RamBaan(startX, startY, x, y, explodeRamBaan));
+      } else if (crackerType === 'diya') {
+        specialCrackersRef.current.push(new WaterDiya(x, y));
+        soundManager.playExplosion(0, 0.4);
       } else {
-        // Rocket
+        // Rocket (default)
         launchRocket(x + (Math.random() - 0.5) * 40, canvasRef.current.height + 20, x, y, selectedPattern);
         lastDragLaunchRef.current = Date.now();
       }
     };
 
     const handlePointerDown = (e) => {
+      if (e.pointerType === 'touch') return; // Handled exclusively by onTouchStart to avoid duplicate firing
       isDraggingRef.current = true;
       const rect = canvasRef.current.getBoundingClientRect();
       const x = e.clientX - rect.left;
@@ -916,6 +1312,7 @@ const FireworksCanvas = forwardRef(
     };
 
     const handlePointerMove = (e) => {
+      if (e.pointerType === 'touch') return;
       if (!isDraggingRef.current) return;
       const rect = canvasRef.current.getBoundingClientRect();
       const x = e.clientX - rect.left;
@@ -928,26 +1325,57 @@ const FireworksCanvas = forwardRef(
 
       if (crackerType === 'rocket') {
         const now = Date.now();
-        if (now - lastDragLaunchRef.current > 130) {
+        if (now - lastDragLaunchRef.current > 120) {
           lastDragLaunchRef.current = now;
           launchRocket(x + (Math.random() - 0.5) * 40, canvasRef.current.height + 20, x, y, selectedPattern);
         }
       }
     };
 
-    const handlePointerUp = () => {
+    const handlePointerUp = (e) => {
+      if (e.pointerType === 'touch') return;
       isDraggingRef.current = false;
       sparklerPosRef.current = null;
       soundManager.stopSparklerSound();
     };
 
+    // Mobile touch handling (with multi-touch & smooth drag drawing)
     const handleTouchStart = (e) => {
+      isDraggingRef.current = true;
       const rect = canvasRef.current.getBoundingClientRect();
       for (let i = 0; i < e.touches.length; i++) {
         const touch = e.touches[i];
         const x = touch.clientX - rect.left;
         const y = touch.clientY - rect.top;
         handleTriggerPoint(x, y);
+      }
+    };
+
+    const handleTouchMove = (e) => {
+      if (!isDraggingRef.current) return;
+      const rect = canvasRef.current.getBoundingClientRect();
+      if (e.touches.length > 0) {
+        const touch = e.touches[0];
+        const x = touch.clientX - rect.left;
+        const y = touch.clientY - rect.top;
+
+        if (crackerType === 'sparkler') {
+          sparklerPosRef.current = { x, y };
+        } else if (crackerType === 'rocket') {
+          const now = Date.now();
+          if (now - lastDragLaunchRef.current > 120) {
+            lastDragLaunchRef.current = now;
+            launchRocket(x + (Math.random() - 0.5) * 40, canvasRef.current.height + 20, x, y, selectedPattern);
+          }
+        }
+      }
+    };
+
+    const handleTouchEnd = (e) => {
+      if (e.touches.length === 0) {
+        isDraggingRef.current = false;
+        sparklerPosRef.current = null;
+        soundManager.stopSparklerSound();
       }
     };
 
@@ -959,6 +1387,9 @@ const FireworksCanvas = forwardRef(
         onPointerUp={handlePointerUp}
         onPointerCancel={handlePointerUp}
         onTouchStart={handleTouchStart}
+        onTouchMove={handleTouchMove}
+        onTouchEnd={handleTouchEnd}
+        onTouchCancel={handleTouchEnd}
         className="fixed inset-0 z-10 w-full h-full cursor-crosshair select-none touch-none overscroll-none"
         title="Tap or Drag anywhere to ignite firecrackers!"
       />
