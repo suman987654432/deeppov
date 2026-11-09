@@ -13,15 +13,11 @@ import {
 
 const CRACKERS = [
   { id: 'rocket', name: 'Rocket', icon: '🚀', desc: 'Click/Tap anywhere to shoot aerial rockets' },
-  { id: 'anaar', name: 'Anaar', icon: '🌋', desc: 'Click to place a towering golden flowerpot fountain' },
-  { id: 'chakri', name: 'Chakri', icon: '🌀', desc: 'Click to spin high-speed rainbow ground wheel' },
-  { id: 'bomb', name: 'Sutli Bomb', icon: '💣', desc: 'Click to plant green bomb with massive shockwave blast' },
+  { id: 'anaar', name: 'Anaar', icon: '🌋', desc: 'Click to place towering golden fountain' },
+  { id: 'chakri', name: 'Chakri', icon: '🌀', desc: 'Click to spin high-speed rainbow wheel' },
+  { id: 'bomb', name: 'Sutli Bomb', icon: '💣', desc: 'Click to plant bomb with shockwave blast' },
   { id: 'ladi', name: 'Ladi', icon: '💥', desc: 'Click for rapid 28-burst crackling chain' },
-  { id: 'sparkler', name: 'Phuljhadi', icon: '✨', desc: 'Drag mouse or finger to draw sizzling fire in air' },
-  { id: 'snake', name: 'Saanp Goli', icon: '🐍', desc: 'Click to burn black tablet & watch the snake grow' },
-  { id: 'bijli', name: 'Bijli Chatai', icon: '⚡', desc: 'Click for sharp snap-crackle flashes' },
-  { id: 'hunter', name: 'Magic Hunter', icon: '🎯', desc: 'Click to shoot 8 rapid colorful tracer comets' },
-  { id: 'kandil', name: 'Sky Kandil', icon: '🪔', desc: 'Click to release a warm glowing sky lantern' },
+  { id: 'hunter', name: 'Magic Hunter', icon: '🎯', desc: 'Click to shoot 8 rapid colorful comet tracers' },
 ];
 
 export default function App() {

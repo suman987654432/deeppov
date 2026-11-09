@@ -117,6 +117,23 @@ class DiwaliAudioEngine {
     this.isAmbientPlaying = true;
   }
 
+  stopAmbientRaga() {
+    if (this.ambientGain && this.ctx) {
+      this.ambientGain.gain.linearRampToValueAtTime(0.0001, this.ctx.currentTime + 0.8);
+      this.isAmbientPlaying = false;
+    }
+  }
+
+  toggleAmbient() {
+    if (this.isAmbientPlaying) {
+      this.stopAmbientRaga();
+      return false;
+    } else {
+      this.startAmbientRaga();
+      return true;
+    }
+  }
+
   // 1. AERIAL ROCKET
   playRocketLaunch(pan = 0) {
     this.ensureContext();

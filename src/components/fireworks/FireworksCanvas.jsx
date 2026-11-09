@@ -1109,6 +1109,15 @@ const FireworksCanvas = forwardRef(
         launchRocket(x + (Math.random() - 0.5) * 60, canvas.height + 20, x, y, pattern);
       },
       triggerCelebration: triggerGrandCelebration,
+      captureSnapshot: () => {
+        const canvas = canvasRef.current;
+        if (!canvas) return null;
+        try {
+          return canvas.toDataURL('image/png');
+        } catch (e) {
+          return null;
+        }
+      },
     }));
 
     useEffect(() => {
@@ -1175,37 +1184,12 @@ const FireworksCanvas = forwardRef(
           nextAutoLaunchRef.current = time + 1400 + Math.random() * 1800;
         }
 
-        // Special crackers (Anaar, Chakri, Bomb, Diya, RamBaan)
+        // Special crackers (Anaar, Chakri, Bomb, Hunter)
         for (let i = specialCrackersRef.current.length - 1; i >= 0; i--) {
           const cr = specialCrackersRef.current[i];
           cr.update(particlesRef.current, speedMultiplier);
           cr.draw(ctx);
           if (cr.isDead) specialCrackersRef.current.splice(i, 1);
-        }
-
-        // Hand Sparkler
-        if (sparklerPosRef.current) {
-          const sp = sparklerPosRef.current;
-          for (let k = 0; k < 6; k++) {
-            const angle = Math.random() * Math.PI * 2;
-            const speed = 1.5 + Math.random() * 4.5;
-            particlesRef.current.push(
-              new Particle(
-                sp.x,
-                sp.y,
-                Math.cos(angle) * speed,
-                Math.sin(angle) * speed,
-                ['#ffd700', '#ffffff', '#fbbf24', '#f59e0b'][Math.floor(Math.random() * 4)],
-                {
-                  decay: 0.035,
-                  friction: 0.95,
-                  gravity: 0.08,
-                  radius: 1.6,
-                  twinkle: true,
-                }
-              )
-            );
-          }
         }
 
         // Rockets
@@ -1265,7 +1249,7 @@ const FireworksCanvas = forwardRef(
       [triggerSkyFlash]
     );
 
-    // Handle touch/click point for ALL 10 AUTHENTIC CRACKERS
+    // Handle touch/click point for selected cracker
     const handleTriggerPoint = (x, y) => {
       if (onInteraction) onInteraction();
 
@@ -1277,24 +1261,8 @@ const FireworksCanvas = forwardRef(
         specialCrackersRef.current.push(new SutliBomb(x, y, explodeSutliBomb));
       } else if (crackerType === 'ladi') {
         triggerLadiAt(x, y);
-      } else if (crackerType === 'sparkler') {
-        sparklerPosRef.current = { x, y };
-        soundManager.startSparklerSound();
-      } else if (crackerType === 'snake') {
-        specialCrackersRef.current.push(new SnakeGoli(x, y));
-      } else if (crackerType === 'bijli') {
-        specialCrackersRef.current.push(new BijliCluster(x, y, triggerSkyFlash));
       } else if (crackerType === 'hunter') {
         specialCrackersRef.current.push(new MagicHunterTube(x, y, shootHunterComet));
-      } else if (crackerType === 'kandil') {
-        specialCrackersRef.current.push(new SkyKandilLantern(x, y));
-      } else if (crackerType === 'rambaan') {
-        const startX = window.innerWidth / 2;
-        const startY = window.innerHeight + 10;
-        specialCrackersRef.current.push(new RamBaan(startX, startY, x, y, explodeRamBaan));
-      } else if (crackerType === 'diya') {
-        specialCrackersRef.current.push(new WaterDiya(x, y));
-        soundManager.playExplosion(0, 0.4);
       } else {
         // Rocket (default)
         launchRocket(x + (Math.random() - 0.5) * 40, canvasRef.current.height + 20, x, y, selectedPattern);
@@ -1303,7 +1271,7 @@ const FireworksCanvas = forwardRef(
     };
 
     const handlePointerDown = (e) => {
-      if (e.pointerType === 'touch') return; // Handled exclusively by onTouchStart to avoid duplicate firing
+      if (e.pointerType === 'touch') return; // Handled by onTouchStart on touch devices
       isDraggingRef.current = true;
       const rect = canvasRef.current.getBoundingClientRect();
       const x = e.clientX - rect.left;
@@ -1318,11 +1286,6 @@ const FireworksCanvas = forwardRef(
       const x = e.clientX - rect.left;
       const y = e.clientY - rect.top;
 
-      if (crackerType === 'sparkler') {
-        sparklerPosRef.current = { x, y };
-        return;
-      }
-
       if (crackerType === 'rocket') {
         const now = Date.now();
         if (now - lastDragLaunchRef.current > 120) {
@@ -1335,11 +1298,9 @@ const FireworksCanvas = forwardRef(
     const handlePointerUp = (e) => {
       if (e.pointerType === 'touch') return;
       isDraggingRef.current = false;
-      sparklerPosRef.current = null;
-      soundManager.stopSparklerSound();
     };
 
-    // Mobile touch handling (with multi-touch & smooth drag drawing)
+    // Mobile touch handling (with multi-touch & drag rockets)
     const handleTouchStart = (e) => {
       isDraggingRef.current = true;
       const rect = canvasRef.current.getBoundingClientRect();
@@ -1359,9 +1320,7 @@ const FireworksCanvas = forwardRef(
         const x = touch.clientX - rect.left;
         const y = touch.clientY - rect.top;
 
-        if (crackerType === 'sparkler') {
-          sparklerPosRef.current = { x, y };
-        } else if (crackerType === 'rocket') {
+        if (crackerType === 'rocket') {
           const now = Date.now();
           if (now - lastDragLaunchRef.current > 120) {
             lastDragLaunchRef.current = now;
@@ -1374,8 +1333,6 @@ const FireworksCanvas = forwardRef(
     const handleTouchEnd = (e) => {
       if (e.touches.length === 0) {
         isDraggingRef.current = false;
-        sparklerPosRef.current = null;
-        soundManager.stopSparklerSound();
       }
     };
 
