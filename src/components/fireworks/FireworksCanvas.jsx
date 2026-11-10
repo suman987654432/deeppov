@@ -1281,6 +1281,7 @@ const FireworksCanvas = forwardRef(
 
     // Handle touch/click point for selected cracker
     const handleTriggerPoint = (x, y) => {
+      soundManager.unlockAudio();
       if (onInteraction) onInteraction();
 
       if (crackerType === 'anaar') {

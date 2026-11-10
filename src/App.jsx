@@ -52,21 +52,27 @@ export default function App() {
   const [isMuted, setIsMuted] = useState(false);
   const [screenShake, setScreenShake] = useState(false);
 
+  const [audioUnlocked, setAudioUnlocked] = useState(false);
+
   const fireworksRef = useRef(null);
 
-  // Initialize audio on first user touch / click
+  // Initialize audio & unlock on first user touch / click
   useEffect(() => {
     soundManager.init();
-    const unlock = () => {
-      soundManager.ensureContext();
-      window.removeEventListener('pointerdown', unlock);
-      window.removeEventListener('touchstart', unlock);
+    const handleUnlock = () => {
+      soundManager.unlockAudio();
+      setAudioUnlocked(true);
+      window.removeEventListener('pointerdown', handleUnlock);
+      window.removeEventListener('touchstart', handleUnlock);
+      window.removeEventListener('click', handleUnlock);
     };
-    window.addEventListener('pointerdown', unlock);
-    window.addEventListener('touchstart', unlock);
+    window.addEventListener('pointerdown', handleUnlock);
+    window.addEventListener('touchstart', handleUnlock);
+    window.addEventListener('click', handleUnlock);
     return () => {
-      window.removeEventListener('pointerdown', unlock);
-      window.removeEventListener('touchstart', unlock);
+      window.removeEventListener('pointerdown', handleUnlock);
+      window.removeEventListener('touchstart', handleUnlock);
+      window.removeEventListener('click', handleUnlock);
     };
   }, []);
 
@@ -147,6 +153,21 @@ export default function App() {
             {currentCracker.desc}
           </span>
         </div>
+
+        {/* Browser Autoplay Sound Unlock Notice */}
+        {!audioUnlocked && (
+          <button
+            onClick={() => {
+              soundManager.unlockAudio();
+              setAudioUnlocked(true);
+              soundManager.playRocketLaunch(0);
+            }}
+            className="pointer-events-auto mt-2 inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-gradient-to-r from-amber-400 to-yellow-500 text-stone-950 font-mono font-bold text-xs sm:text-sm shadow-[0_0_25px_#ffd700] cursor-pointer animate-pulse active:scale-95 transition-all border border-yellow-200"
+          >
+            <Volume2 className="w-4 h-4 text-stone-950" />
+            <span>Tap To Enable Sound 🔊</span>
+          </button>
+        )}
       </header>
 
       {/* 5. Permanent Stable Bottom Control HUD */}
