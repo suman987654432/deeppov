@@ -37,12 +37,7 @@ const CRACKERS = [
     desc: 'Multi-Color Deluxe Fountain! 350px towering rainbow spark shower.',
   },
 
-  {
-    id: 'anaar',
-    name: 'Stack Overflow (Anaar)',
-    icon: '🌋',
-    desc: 'Sivakasi Conical Flowerpot! 350px towering golden titanium spark fountain.',
-  },
+
   {
     id: 'sparkler',
     name: 'Live Hotfix (Phuljhadi)',
