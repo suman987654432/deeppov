@@ -129,27 +129,27 @@ export default function App() {
       />
 
       {/* 4. Top Header & Active Cracker Badge */}
-      <header className="fixed top-3 left-0 right-0 z-20 flex flex-col items-center pointer-events-none px-4 text-center">
-        <div className="pointer-events-auto flex items-center gap-2 px-3.5 py-1 rounded-full bg-black/70 border border-amber-500/40 backdrop-blur-md text-amber-300 text-[11px] sm:text-xs tracking-wider mb-1 shadow-[0_0_15px_rgba(245,158,11,0.25)] font-mono">
-          <Terminal className="w-3.5 h-3.5 text-emerald-400" />
+      <header className="fixed top-2 sm:top-3 left-0 right-0 z-20 flex flex-col items-center pointer-events-none px-2 sm:px-4 text-center pt-[env(safe-area-inset-top,0px)]">
+        <div className="pointer-events-auto flex items-center gap-1.5 px-3 py-0.5 sm:py-1 rounded-full bg-black/75 border border-amber-500/40 backdrop-blur-md text-amber-300 text-[10px] sm:text-xs tracking-wider mb-1 shadow-[0_0_15px_rgba(245,158,11,0.25)] font-mono">
+          <Terminal className="w-3 h-3 text-emerald-400" />
           <span>status: 200 OK | // zero bugs, only pure fireworks</span>
         </div>
 
-        <h1 className="font-serif text-2xl sm:text-4xl md:text-5xl font-black tracking-wider gold-text-gradient drop-shadow-[0_4px_25px_rgba(0,0,0,0.9)]">
+        <h1 className="font-serif text-xl sm:text-3xl md:text-5xl font-black tracking-wider gold-text-gradient drop-shadow-[0_4px_25px_rgba(0,0,0,0.9)]">
           POV: PROGRAMMER DIWALI <span className="inline-block text-amber-300 animate-bounce">💻✨</span>
         </h1>
 
-        <p className="font-mono text-[11px] sm:text-xs text-amber-200/90 mt-0.5 drop-shadow hidden xs:block">
+        <p className="font-mono text-[10px] sm:text-xs text-amber-200/90 mt-0.5 drop-shadow hidden xs:block">
           // Deployed untested code directly to production on Friday... watch the servers explode! 🚀🔥
         </p>
 
         {/* Active Cracker Instructions Badge */}
-        <div className="mt-1.5 pointer-events-auto flex items-center gap-2 px-3.5 sm:px-4 py-1.5 rounded-full bg-black/85 border border-amber-400/50 backdrop-blur-lg shadow-lg font-mono max-w-[94vw] overflow-hidden">
-          <span className="text-base flex-shrink-0">{currentCracker.icon}</span>
+        <div className="mt-1 sm:mt-1.5 pointer-events-auto flex items-center gap-2 px-3 sm:px-4 py-1 sm:py-1.5 rounded-full bg-black/85 border border-amber-400/50 backdrop-blur-lg shadow-lg font-mono max-w-[96vw] overflow-hidden">
+          <span className="text-sm sm:text-base flex-shrink-0">{currentCracker.icon}</span>
           <span className="text-xs sm:text-sm font-bold text-amber-200 flex-shrink-0">
             {currentCracker.name}:
           </span>
-          <span className="text-[11px] sm:text-xs text-amber-100/90 font-light truncate">
+          <span className="text-[10px] sm:text-xs text-amber-100/90 font-light truncate">
             {currentCracker.desc}
           </span>
         </div>
@@ -162,35 +162,38 @@ export default function App() {
               setAudioUnlocked(true);
               soundManager.playRocketLaunch(0);
             }}
-            className="pointer-events-auto mt-2 inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-gradient-to-r from-amber-400 to-yellow-500 text-stone-950 font-mono font-bold text-xs sm:text-sm shadow-[0_0_25px_#ffd700] cursor-pointer animate-pulse active:scale-95 transition-all border border-yellow-200"
+            className="pointer-events-auto mt-1.5 sm:mt-2 inline-flex items-center gap-1.5 px-3.5 sm:px-4 py-1 sm:py-1.5 rounded-full bg-gradient-to-r from-amber-400 to-yellow-500 text-stone-950 font-mono font-bold text-[11px] sm:text-sm shadow-[0_0_25px_#ffd700] cursor-pointer animate-pulse active:scale-95 transition-all border border-yellow-200"
           >
-            <Volume2 className="w-4 h-4 text-stone-950" />
+            <Volume2 className="w-3.5 h-3.5 text-stone-950" />
             <span>Tap To Enable Sound 🔊</span>
           </button>
         )}
       </header>
 
       {/* 5. Permanent Stable Bottom Control HUD */}
-      <div className="fixed bottom-3 sm:bottom-5 left-0 right-0 z-20 flex flex-col items-center pointer-events-none px-2 sm:px-4">
-        <div className="pointer-events-auto w-full max-w-2xl bg-black/85 border border-amber-500/40 rounded-3xl p-3 sm:p-4 backdrop-blur-xl shadow-[0_0_50px_rgba(0,0,0,0.9)] flex flex-col gap-2.5">
+      <div className="fixed bottom-2 sm:bottom-4 left-0 right-0 z-20 flex flex-col items-center pointer-events-none px-2 sm:px-4 pb-[env(safe-area-inset-bottom,0px)]">
+        <div className="pointer-events-auto w-full max-w-xl bg-black/85 border border-amber-500/40 rounded-2xl sm:rounded-3xl p-2.5 sm:p-4 backdrop-blur-xl shadow-[0_0_50px_rgba(0,0,0,0.9)] flex flex-col gap-2">
           {/* Traditional Cracker Tabs (Hilarious Programmer Diwali Theme) */}
-          <div className="flex items-center gap-1.5 overflow-x-auto pb-1.5 scrollbar-none border-b border-amber-500/20">
-            <span className="text-[11px] font-black text-amber-400/90 uppercase tracking-wider pl-1 pr-1.5 whitespace-nowrap font-mono">
+          <div
+            className="flex items-center gap-1.5 overflow-x-auto pb-1.5 scrollbar-none border-b border-amber-500/20 touch-pan-x"
+            style={{ WebkitOverflowScrolling: 'touch' }}
+          >
+            <span className="text-[10px] sm:text-[11px] font-black text-amber-400/90 uppercase tracking-wider pl-1 pr-1 whitespace-nowrap font-mono">
               Terminal.sh:
             </span>
-            <div className="flex items-center gap-1.5 font-mono">
+            <div className="flex items-center gap-1 sm:gap-1.5 font-mono">
               {CRACKERS.map((c) => (
                 <button
                   key={c.id}
                   onClick={() => setSelectedCracker(c.id)}
                   title={c.desc}
-                  className={`flex items-center gap-1.5 px-3 py-1.5 rounded-full text-xs font-bold transition-all cursor-pointer whitespace-nowrap shadow-sm ${
+                  className={`flex items-center gap-1 sm:gap-1.5 px-2.5 sm:px-3 py-1 sm:py-1.5 rounded-full text-[11px] sm:text-xs font-bold transition-all cursor-pointer whitespace-nowrap shadow-sm ${
                     selectedCracker === c.id
                       ? 'bg-gradient-to-r from-amber-400 to-yellow-500 text-stone-950 shadow-[0_0_15px_#ffd700] scale-105 border border-yellow-200'
                       : 'bg-black/50 text-amber-200/70 hover:text-white border border-amber-500/20 hover:border-amber-400/50'
                   }`}
                 >
-                  <span className="text-sm">{c.icon}</span>
+                  <span className="text-xs sm:text-sm">{c.icon}</span>
                   <span>{c.name}</span>
                 </button>
               ))}
@@ -198,22 +201,22 @@ export default function App() {
           </div>
 
           {/* Action Buttons Row */}
-          <div className="flex items-center justify-between gap-2 flex-wrap pt-0.5">
+          <div className="flex items-center justify-between gap-1.5 sm:gap-2 pt-0.5">
             {/* Grand Fireworks Finale -> git push --force 🚀💥 */}
             <button
               onClick={triggerGrandShow}
-              className="btn-gold flex items-center gap-1.5 px-4 sm:px-5 py-2 rounded-full text-xs sm:text-sm font-black tracking-wide uppercase cursor-pointer active:scale-95 font-mono shadow-[0_0_20px_rgba(245,158,11,0.5)]"
+              className="btn-gold flex items-center justify-center gap-1 sm:gap-1.5 px-3 sm:px-5 py-1.5 sm:py-2 rounded-full text-xs sm:text-sm font-black tracking-wide uppercase cursor-pointer active:scale-95 font-mono shadow-[0_0_20px_rgba(245,158,11,0.5)] flex-shrink-0"
               title="Force push to production & explode all servers!"
             >
-              <Sparkles className="w-4 h-4 text-amber-950 animate-bounce" />
+              <Sparkles className="w-3.5 h-3.5 sm:w-4 sm:h-4 text-amber-950 animate-bounce" />
               <span>git push --force 🚀💥</span>
             </button>
 
-            <div className="flex items-center gap-1.5">
+            <div className="flex items-center gap-1 sm:gap-1.5">
               {/* Slow Motion */}
               <button
                 onClick={() => setSlowMotion(!slowMotion)}
-                className={`flex items-center gap-1 px-3 py-1.5 rounded-full text-xs font-medium transition-all cursor-pointer border ${
+                className={`flex items-center gap-1 px-2.5 sm:px-3 py-1.5 rounded-full text-[11px] sm:text-xs font-medium transition-all cursor-pointer border ${
                   slowMotion
                     ? 'bg-amber-500 text-stone-950 font-bold border-amber-400 shadow-[0_0_12px_#ffd700]'
                     : 'bg-stone-900/80 text-stone-300 border-stone-700 hover:text-white'
@@ -227,7 +230,7 @@ export default function App() {
               {/* Auto Sky Toggle */}
               <button
                 onClick={() => setAutoPlay(!autoPlay)}
-                className={`flex items-center gap-1 px-3 py-1.5 rounded-full text-xs font-medium transition-all cursor-pointer border ${
+                className={`flex items-center gap-1 px-2.5 sm:px-3 py-1.5 rounded-full text-[11px] sm:text-xs font-medium transition-all cursor-pointer border ${
                   autoPlay
                     ? 'bg-amber-500/20 text-amber-300 border-amber-400/50 shadow-[0_0_12px_rgba(245,158,11,0.3)]'
                     : 'bg-stone-900/80 text-stone-400 border-stone-700 hover:text-stone-200'
@@ -240,14 +243,14 @@ export default function App() {
               {/* Sound Toggle */}
               <button
                 onClick={toggleMute}
-                className={`p-2 rounded-full border transition-all cursor-pointer ${
+                className={`p-1.5 sm:p-2 rounded-full border transition-all cursor-pointer ${
                   !isMuted
                     ? 'bg-amber-500/20 text-amber-300 border-amber-400/50 shadow-[0_0_12px_rgba(245,158,11,0.3)]'
                     : 'bg-stone-900/80 text-stone-400 border-stone-700 hover:text-stone-200'
                 }`}
                 title={isMuted ? 'Unmute' : 'Mute'}
               >
-                {isMuted ? <VolumeX className="w-4 h-4" /> : <Volume2 className="w-4 h-4 text-amber-400 animate-pulse" />}
+                {isMuted ? <VolumeX className="w-3.5 h-3.5 sm:w-4 sm:h-4" /> : <Volume2 className="w-3.5 h-3.5 sm:w-4 sm:h-4 text-amber-400 animate-pulse" />}
               </button>
             </div>
           </div>
