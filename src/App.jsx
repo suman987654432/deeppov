@@ -13,11 +13,36 @@ import {
 } from 'lucide-react';
 
 const CRACKERS = [
-  { id: 'rocket', name: 'Deploy to Prod', icon: '🚀', desc: 'Push kiya cloud par, 7-Color Rainbow aatishbaazi 🌈' },
-  { id: 'chakri', name: 'Infinite Loop', icon: '🌀', desc: 'while(true) ghume jaa raha hai 100% CPU par' },
-  { id: 'bomb', name: 'Unhandled Exception', icon: '💣', desc: 'Screen shake + server dead + Jira ticket' },
-  { id: 'ladi', name: 'Merge Conflicts', icon: '💥', desc: '28 commits ek sath line se phat gaye' },
-  { id: 'hunter', name: 'Microservices', icon: '🎯', desc: '8 rapid async requests shoot ho rahe hain' },
+  {
+    id: 'rocket',
+    name: 'Deploy to Prod',
+    icon: '🚀',
+    desc: 'Pushed untested code to main on Friday 5 PM. 7-Color Rainbow cloud burst!',
+  },
+  {
+    id: 'chakri',
+    name: 'Infinite Loop',
+    icon: '🌀',
+    desc: 'while(true) spinning CPU at 100%. Cooling fans roaring, rainbow spirals flying!',
+  },
+  {
+    id: 'bomb',
+    name: 'Unhandled Exception',
+    icon: '💣',
+    desc: 'FATAL: NullPointerException! Screen shake, server down & P1 incident triggered.',
+  },
+  {
+    id: 'ladi',
+    name: 'Merge Conflicts',
+    icon: '💥',
+    desc: '<<<<<<< HEAD vs >>>>>>> main: 28 Git conflicts exploding in rapid chain reaction!',
+  },
+  {
+    id: 'hunter',
+    name: 'Microservices',
+    icon: '🎯',
+    desc: 'Firing 8 rapid async API tracer comets praying at least one returns 200 OK.',
+  },
 ];
 
 export default function App() {
@@ -101,7 +126,7 @@ export default function App() {
       <header className="fixed top-3 left-0 right-0 z-20 flex flex-col items-center pointer-events-none px-4 text-center">
         <div className="pointer-events-auto flex items-center gap-2 px-3.5 py-1 rounded-full bg-black/70 border border-amber-500/40 backdrop-blur-md text-amber-300 text-[11px] sm:text-xs tracking-wider mb-1 shadow-[0_0_15px_rgba(245,158,11,0.25)] font-mono">
           <Terminal className="w-3.5 h-3.5 text-emerald-400" />
-          <span>status: 200 OK | // zero bugs, only aatishbaazi</span>
+          <span>status: 200 OK | // zero bugs, only pure fireworks</span>
         </div>
 
         <h1 className="font-serif text-2xl sm:text-4xl md:text-5xl font-black tracking-wider gold-text-gradient drop-shadow-[0_4px_25px_rgba(0,0,0,0.9)]">
@@ -109,16 +134,16 @@ export default function App() {
         </h1>
 
         <p className="font-mono text-[11px] sm:text-xs text-amber-200/90 mt-0.5 drop-shadow hidden xs:block">
-          // Friday evening ko bina testing prod deploy maar diya... ab aatishbaazi dekho! 🚀🔥
+          // Deployed untested code directly to production on Friday... watch the servers explode! 🚀🔥
         </p>
 
         {/* Active Cracker Instructions Badge */}
-        <div className="mt-1.5 pointer-events-auto flex items-center gap-2 px-4 py-1.5 rounded-full bg-black/80 border border-amber-400/50 backdrop-blur-lg shadow-lg font-mono">
-          <span className="text-base">{currentCracker.icon}</span>
-          <span className="text-xs sm:text-sm font-bold text-amber-200">
+        <div className="mt-1.5 pointer-events-auto flex items-center gap-2 px-3.5 sm:px-4 py-1.5 rounded-full bg-black/85 border border-amber-400/50 backdrop-blur-lg shadow-lg font-mono max-w-[94vw] overflow-hidden">
+          <span className="text-base flex-shrink-0">{currentCracker.icon}</span>
+          <span className="text-xs sm:text-sm font-bold text-amber-200 flex-shrink-0">
             {currentCracker.name}:
           </span>
-          <span className="text-xs text-amber-100/80 font-light hidden sm:inline">
+          <span className="text-[11px] sm:text-xs text-amber-100/90 font-light truncate">
             {currentCracker.desc}
           </span>
         </div>
