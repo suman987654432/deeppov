@@ -42,6 +42,12 @@ const CRACKERS = [
     icon: '🎯',
     desc: '8 rapid async API tracer comets fired. Hoping at least one returns 200 OK.',
   },
+  {
+    id: 'sparkler',
+    name: 'Phuljhadi',
+    icon: '✨',
+    desc: 'Drag mouse or finger to draw sizzling golden fire in the air!',
+  },
 ];
 
 export default function App() {
@@ -52,6 +58,7 @@ export default function App() {
   const [screenShake, setScreenShake] = useState(false);
 
   const [audioUnlocked, setAudioUnlocked] = useState(false);
+  const [hasInteracted, setHasInteracted] = useState(false);
 
   const fireworksRef = useRef(null);
 
@@ -61,6 +68,7 @@ export default function App() {
     const handleUnlock = () => {
       soundManager.unlockAudio();
       setAudioUnlocked(true);
+      setHasInteracted(true);
       window.removeEventListener('pointerdown', handleUnlock);
       window.removeEventListener('touchstart', handleUnlock);
       window.removeEventListener('click', handleUnlock);
@@ -73,6 +81,11 @@ export default function App() {
       window.removeEventListener('touchstart', handleUnlock);
       window.removeEventListener('click', handleUnlock);
     };
+  }, []);
+
+  const handleInteraction = useCallback(() => {
+    setHasInteracted(true);
+    setAudioUnlocked(true);
   }, []);
 
   // Screen shake on big blast
@@ -124,7 +137,31 @@ export default function App() {
         crackerType={selectedCracker}
         slowMotion={slowMotion}
         onScreenShake={triggerScreenShake}
+        onInteraction={handleInteraction}
       />
+
+      {/* First-Time User Interactive Instruction (Auto-dismisses on first tap/click) */}
+      {!hasInteracted && (
+        <div
+          onClick={() => {
+            soundManager.unlockAudio();
+            setAudioUnlocked(true);
+            setHasInteracted(true);
+            soundManager.playRocketLaunch(0);
+          }}
+          className="fixed inset-0 z-30 flex items-center justify-center pointer-events-none px-4"
+        >
+          <div className="pointer-events-auto flex flex-col items-center gap-1.5 px-5 py-3.5 rounded-2xl bg-black/90 border border-amber-400/60 backdrop-blur-xl shadow-[0_0_40px_rgba(245,158,11,0.5)] cursor-pointer animate-pulse active:scale-95 transition-all text-center max-w-xs sm:max-w-sm">
+            <div className="text-2xl animate-bounce">👆✨</div>
+            <p className="font-mono text-sm sm:text-base font-bold text-amber-200">
+              Tap anywhere on the sky!
+            </p>
+            <p className="font-mono text-[11px] sm:text-xs text-amber-100/80">
+              Click to ignite crackers & drag to draw sizzling fire 🔥
+            </p>
+          </div>
+        </div>
+      )}
 
       {/* 4. Top Header & Active Cracker Badge (Ultra-compact with minimal gap) */}
       <header className="fixed top-2 sm:top-3 left-0 right-0 z-20 flex flex-col items-center pointer-events-none px-2 text-center">

@@ -1222,6 +1222,31 @@ const FireworksCanvas = forwardRef(
           if (cr.isDead) specialCrackersRef.current.splice(i, 1);
         }
 
+        // Hand Sparkler (Phuljhadi)
+        if (sparklerPosRef.current) {
+          const sp = sparklerPosRef.current;
+          for (let k = 0; k < 6; k++) {
+            const angle = Math.random() * Math.PI * 2;
+            const speed = 1.5 + Math.random() * 4.5;
+            particlesRef.current.push(
+              new Particle(
+                sp.x,
+                sp.y,
+                Math.cos(angle) * speed,
+                Math.sin(angle) * speed,
+                ['#ffd700', '#ffffff', '#fbbf24', '#f59e0b'][Math.floor(Math.random() * 4)],
+                {
+                  decay: 0.035,
+                  friction: 0.95,
+                  gravity: 0.08,
+                  radius: 1.6,
+                  twinkle: true,
+                }
+              )
+            );
+          }
+        }
+
         // Rockets
         for (let i = rocketsRef.current.length - 1; i >= 0; i--) {
           const r = rocketsRef.current[i];
@@ -1294,6 +1319,9 @@ const FireworksCanvas = forwardRef(
         triggerLadiAt(x, y);
       } else if (crackerType === 'hunter') {
         specialCrackersRef.current.push(new MagicHunterTube(x, y, shootHunterComet));
+      } else if (crackerType === 'sparkler') {
+        sparklerPosRef.current = { x, y };
+        soundManager.startSparklerSound();
       } else {
         // Rocket (default)
         launchRocket(x + (Math.random() - 0.5) * 40, canvasRef.current.height + 20, x, y, selectedPattern);
@@ -1317,6 +1345,11 @@ const FireworksCanvas = forwardRef(
       const x = e.clientX - rect.left;
       const y = e.clientY - rect.top;
 
+      if (crackerType === 'sparkler') {
+        sparklerPosRef.current = { x, y };
+        return;
+      }
+
       if (crackerType === 'rocket') {
         const now = Date.now();
         if (now - lastDragLaunchRef.current > 120) {
@@ -1329,9 +1362,11 @@ const FireworksCanvas = forwardRef(
     const handlePointerUp = (e) => {
       if (e.pointerType === 'touch') return;
       isDraggingRef.current = false;
+      sparklerPosRef.current = null;
+      soundManager.stopSparklerSound();
     };
 
-    // Mobile touch handling (with multi-touch & drag rockets)
+    // Mobile touch handling (with multi-touch & drag rockets / sparkler)
     const handleTouchStart = (e) => {
       isDraggingRef.current = true;
       const rect = canvasRef.current.getBoundingClientRect();
@@ -1351,7 +1386,9 @@ const FireworksCanvas = forwardRef(
         const x = touch.clientX - rect.left;
         const y = touch.clientY - rect.top;
 
-        if (crackerType === 'rocket') {
+        if (crackerType === 'sparkler') {
+          sparklerPosRef.current = { x, y };
+        } else if (crackerType === 'rocket') {
           const now = Date.now();
           if (now - lastDragLaunchRef.current > 120) {
             lastDragLaunchRef.current = now;
@@ -1364,6 +1401,8 @@ const FireworksCanvas = forwardRef(
     const handleTouchEnd = (e) => {
       if (e.touches.length === 0) {
         isDraggingRef.current = false;
+        sparklerPosRef.current = null;
+        soundManager.stopSparklerSound();
       }
     };
 
