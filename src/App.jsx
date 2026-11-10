@@ -144,6 +144,21 @@ export default function App() {
             {currentCracker.desc}
           </span>
         </div>
+
+        {/* Click For Voice/Sound Notice (Auto-dismisses on first tap) */}
+        {!audioUnlocked && (
+          <button
+            onClick={() => {
+              soundManager.unlockAudio();
+              setAudioUnlocked(true);
+              soundManager.playRocketLaunch(0);
+            }}
+            className="pointer-events-auto mt-1.5 inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-gradient-to-r from-amber-400 to-yellow-500 text-stone-950 font-mono font-bold text-[11px] sm:text-xs shadow-[0_0_20px_#ffd700] cursor-pointer animate-pulse active:scale-95 transition-all border border-yellow-200"
+          >
+            <Volume2 className="w-3.5 h-3.5 text-stone-950" />
+            <span>Tap to Enable Sound 🔊</span>
+          </button>
+        )}
       </header>
 
       {/* 5. Permanent Stable Bottom Control HUD */}
