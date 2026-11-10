@@ -107,9 +107,8 @@ export default function App() {
 
   return (
     <div
-      className={`relative w-full h-full overflow-hidden bg-[#030206] select-none touch-none overscroll-none ${
-        screenShake ? 'screen-shake' : ''
-      }`}
+      className={`relative w-full h-full overflow-hidden bg-[#030206] select-none touch-none overscroll-none ${screenShake ? 'screen-shake' : ''
+        }`}
     >
       {/* 1. Deep Midnight Cosmic Sky Background */}
       <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_bottom,rgba(35,16,55,0.85)_0%,rgba(10,5,22,0.95)_50%,#030206_100%)] pointer-events-none" />
@@ -187,11 +186,10 @@ export default function App() {
                   key={c.id}
                   onClick={() => setSelectedCracker(c.id)}
                   title={c.desc}
-                  className={`flex items-center gap-1 sm:gap-1.5 px-2.5 sm:px-3 py-1 sm:py-1.5 rounded-full text-[11px] sm:text-xs font-bold transition-all cursor-pointer whitespace-nowrap shadow-sm ${
-                    selectedCracker === c.id
-                      ? 'bg-gradient-to-r from-amber-400 to-yellow-500 text-stone-950 shadow-[0_0_15px_#ffd700] scale-105 border border-yellow-200'
-                      : 'bg-black/50 text-amber-200/70 hover:text-white border border-amber-500/20 hover:border-amber-400/50'
-                  }`}
+                  className={`flex items-center gap-1 sm:gap-1.5 px-2.5 sm:px-3 py-1 sm:py-1.5 rounded-full text-[11px] sm:text-xs font-bold transition-all cursor-pointer whitespace-nowrap shadow-sm ${selectedCracker === c.id
+                    ? 'bg-gradient-to-r from-amber-400 to-yellow-500 text-stone-950 shadow-[0_0_15px_#ffd700] scale-105 border border-yellow-200'
+                    : 'bg-black/50 text-amber-200/70 hover:text-white border border-amber-500/20 hover:border-amber-400/50'
+                    }`}
                 >
                   <span className="text-xs sm:text-sm">{c.icon}</span>
                   <span>{c.name}</span>
@@ -214,27 +212,16 @@ export default function App() {
 
             <div className="flex items-center gap-1 sm:gap-1.5">
               {/* Slow Motion */}
-              <button
-                onClick={() => setSlowMotion(!slowMotion)}
-                className={`flex items-center gap-1 px-2.5 sm:px-3 py-1.5 rounded-full text-[11px] sm:text-xs font-medium transition-all cursor-pointer border ${
-                  slowMotion
-                    ? 'bg-amber-500 text-stone-950 font-bold border-amber-400 shadow-[0_0_12px_#ffd700]'
-                    : 'bg-stone-900/80 text-stone-300 border-stone-700 hover:text-white'
-                }`}
-                title="Slow down firework explosion speed to 35%"
-              >
-                <Clock className="w-3.5 h-3.5" />
-                <span>Slow-Mo</span>
-              </button>
+
+
 
               {/* Auto Sky Toggle */}
               <button
                 onClick={() => setAutoPlay(!autoPlay)}
-                className={`flex items-center gap-1 px-2.5 sm:px-3 py-1.5 rounded-full text-[11px] sm:text-xs font-medium transition-all cursor-pointer border ${
-                  autoPlay
-                    ? 'bg-amber-500/20 text-amber-300 border-amber-400/50 shadow-[0_0_12px_rgba(245,158,11,0.3)]'
-                    : 'bg-stone-900/80 text-stone-400 border-stone-700 hover:text-stone-200'
-                }`}
+                className={`flex items-center gap-1 px-2.5 sm:px-3 py-1.5 rounded-full text-[11px] sm:text-xs font-medium transition-all cursor-pointer border ${autoPlay
+                  ? 'bg-amber-500/20 text-amber-300 border-amber-400/50 shadow-[0_0_12px_rgba(245,158,11,0.3)]'
+                  : 'bg-stone-900/80 text-stone-400 border-stone-700 hover:text-stone-200'
+                  }`}
               >
                 {autoPlay ? <Pause className="w-3.5 h-3.5 text-amber-400" /> : <Play className="w-3.5 h-3.5" />}
                 <span className="hidden xs:inline">{autoPlay ? 'Auto ON' : 'Auto OFF'}</span>
@@ -243,11 +230,10 @@ export default function App() {
               {/* Sound Toggle */}
               <button
                 onClick={toggleMute}
-                className={`p-1.5 sm:p-2 rounded-full border transition-all cursor-pointer ${
-                  !isMuted
-                    ? 'bg-amber-500/20 text-amber-300 border-amber-400/50 shadow-[0_0_12px_rgba(245,158,11,0.3)]'
-                    : 'bg-stone-900/80 text-stone-400 border-stone-700 hover:text-stone-200'
-                }`}
+                className={`p-1.5 sm:p-2 rounded-full border transition-all cursor-pointer ${!isMuted
+                  ? 'bg-amber-500/20 text-amber-300 border-amber-400/50 shadow-[0_0_12px_rgba(245,158,11,0.3)]'
+                  : 'bg-stone-900/80 text-stone-400 border-stone-700 hover:text-stone-200'
+                  }`}
                 title={isMuted ? 'Unmute' : 'Mute'}
               >
                 {isMuted ? <VolumeX className="w-3.5 h-3.5 sm:w-4 sm:h-4" /> : <Volume2 className="w-3.5 h-3.5 sm:w-4 sm:h-4 text-amber-400 animate-pulse" />}
@@ -256,6 +242,6 @@ export default function App() {
           </div>
         </div>
       </div>
-    </div>
+    </div >
   );
 }
