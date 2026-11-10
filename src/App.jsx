@@ -126,16 +126,16 @@ export default function App() {
         onScreenShake={triggerScreenShake}
       />
 
-      {/* 4. Top Header & Active Cracker Badge */}
-      <header className="fixed top-2 sm:top-3 left-0 right-0 z-20 flex flex-col items-center pointer-events-none px-2 sm:px-4 text-center pt-[env(safe-area-inset-top,0px)]">
-        <h1 className="font-serif text-xl sm:text-2xl md:text-3xl font-black tracking-wider gold-text-gradient drop-shadow-[0_4px_25px_rgba(0,0,0,0.9)] leading-tight">
-          POV: PROGRAMMER DIWALI <span className="inline-block text-amber-300 animate-bounce">💻✨</span>
+      {/* 4. Top Header & Active Cracker Badge (Ultra-compact with minimal gap) */}
+      <header className="fixed top-2 sm:top-3 left-0 right-0 z-20 flex flex-col items-center pointer-events-none px-2 text-center">
+        <h1 className="font-sans text-xl sm:text-2xl md:text-3xl font-black tracking-tight gold-text-gradient drop-shadow-[0_2px_15px_rgba(0,0,0,0.9)] m-0 p-0 leading-none uppercase">
+          POV: PROGRAMMER DIWALI <span className="inline-block text-amber-300">💻✨</span>
         </h1>
 
-        {/* Active Cracker Instructions Badge (Tight gap & fully visible) */}
-        <div className="mt-1 pointer-events-auto flex items-center justify-center flex-wrap gap-x-2 gap-y-0.5 px-3.5 sm:px-4 py-1.5 rounded-2xl sm:rounded-full bg-black/85 border border-amber-400/50 backdrop-blur-lg shadow-lg font-mono max-w-[94vw] text-center leading-snug">
+        {/* Active Cracker Instructions Badge - Tight 4px gap */}
+        <div className="mt-1 pointer-events-auto flex items-center justify-center flex-wrap gap-x-2 gap-y-0.5 px-3 sm:px-4 py-1 rounded-full bg-black/90 border border-amber-400/45 backdrop-blur-md shadow-lg font-mono max-w-[95vw] text-center leading-tight">
           <div className="inline-flex items-center gap-1.5 flex-shrink-0">
-            <span className="text-sm sm:text-base">{currentCracker.icon}</span>
+            <span className="text-sm">{currentCracker.icon}</span>
             <span className="text-xs sm:text-sm font-bold text-amber-200 whitespace-nowrap">
               {currentCracker.name}:
             </span>
@@ -144,21 +144,6 @@ export default function App() {
             {currentCracker.desc}
           </span>
         </div>
-
-        {/* Browser Autoplay Sound Unlock Notice */}
-        {!audioUnlocked && (
-          <button
-            onClick={() => {
-              soundManager.unlockAudio();
-              setAudioUnlocked(true);
-              soundManager.playRocketLaunch(0);
-            }}
-            className="pointer-events-auto mt-1.5 sm:mt-2 inline-flex items-center gap-1.5 px-3.5 sm:px-4 py-1 sm:py-1.5 rounded-full bg-gradient-to-r from-amber-400 to-yellow-500 text-stone-950 font-mono font-bold text-[11px] sm:text-sm shadow-[0_0_25px_#ffd700] cursor-pointer animate-pulse active:scale-95 transition-all border border-yellow-200"
-          >
-            <Volume2 className="w-3.5 h-3.5 text-stone-950" />
-            <span>Tap To Enable Sound 🔊</span>
-          </button>
-        )}
       </header>
 
       {/* 5. Permanent Stable Bottom Control HUD */}
