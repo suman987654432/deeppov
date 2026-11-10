@@ -160,6 +160,7 @@ class Particle {
     this.vx = vx;
     this.vy = vy;
     this.color = color;
+    this.secondaryColor = options.secondaryColor || color;
     this.alpha = 1.0;
     this.decay = options.decay || 0.012 + Math.random() * 0.012;
     this.friction = options.friction || 0.965;
@@ -189,11 +190,12 @@ class Particle {
 
     if (this.hasSecondary && !this.secondaryTriggered && this.alpha < 0.5) {
       this.secondaryTriggered = true;
+      const secColor = this.secondaryColor || this.color || '#ffffff';
       for (let i = 0; i < 4; i++) {
         const a = (i * Math.PI) / 2 + Math.random() * 0.2;
         const spd = 1.5 + Math.random() * 1.5;
         particlesRef.push(
-          new Particle(this.x, this.y, Math.cos(a) * spd, Math.sin(a) * spd, '#ffffff', {
+          new Particle(this.x, this.y, Math.cos(a) * spd, Math.sin(a) * spd, secColor, {
             decay: 0.03,
             friction: 0.95,
             gravity: 0.04,
@@ -303,16 +305,17 @@ class WaterDiya {
   }
 }
 
-// 5. ANAAR (FOUNTAIN)
+// 5. REALISTIC ANAAR (CONICAL FLOWERPOT FOUNTAIN - SIVAKASI PACKAGING)
 class AnaarFountain {
-  constructor(x, y, duration = 190) {
+  constructor(x, y, duration = 240) {
     this.x = x;
     this.y = y;
     this.life = duration;
     this.maxLife = duration;
     this.isDead = false;
+    this.fuseLife = 22; // Fuse burns for first ~0.35s
     soundManager.playAnaarSizzle();
-    triggerHaptic([30, 50, 30, 50]);
+    triggerHaptic([30, 50, 40, 60]);
   }
 
   update(particlesRef, speedMultiplier = 1) {
@@ -322,45 +325,220 @@ class AnaarFountain {
       return;
     }
 
-    const emitCount = Math.floor(9 + Math.random() * 7);
+    // Fuse burning phase
+    if (this.fuseLife > 0) {
+      this.fuseLife -= speedMultiplier;
+      for (let i = 0; i < 3; i++) {
+        const a = -Math.PI / 2 + (Math.random() - 0.5) * 1.2;
+        const spd = 1.5 + Math.random() * 2.5;
+        particlesRef.push(
+          new Particle(this.x, this.y - 28, Math.cos(a) * spd, Math.sin(a) * spd, '#ffea75', {
+            decay: 0.08,
+            radius: 1.5,
+            gravity: 0.04,
+          })
+        );
+      }
+      return;
+    }
+
+    // Eruption phase: Towering Multi-Color Deluxe Rainbow Weeping Willow Fountain
+    const normalizedTime = 1 - this.life / this.maxLife; // 0.0 to 1.0
+    const progress = Math.sin(normalizedTime * Math.PI);
+    const emitCount = Math.floor(18 + progress * 24);
+
+    // Authentic Multi-Color Deluxe Cracker Palette (Jewel tones: Emerald Green, Cyan, Ruby Crimson, Violet, Gold, Tangerine, Titanium)
+    const rainbowColors = [
+      '#00e5ff', // Electric Cyan
+      '#10b981', // Barium Emerald Green
+      '#ff0055', // Strontium Ruby Crimson
+      '#a855f7', // Royal Violet
+      '#ffd700', // Imperial Gold
+      '#fb923c', // Vivid Sunset Orange
+      '#38bdf8', // Sky Sapphire
+      '#ec4899', // Hot Pink
+      '#4ade80', // Neon Mint
+      '#ffffff', // Pure Titanium White
+    ];
+
     for (let i = 0; i < emitCount; i++) {
-      const angle = -Math.PI / 2 + (Math.random() - 0.5) * 0.55;
-      const progress = 1 - Math.abs(this.life - this.maxLife / 2) / (this.maxLife / 2);
-      const speed = 8.0 + progress * 11.0 + Math.random() * 4.5;
+      const spread = 0.36 + progress * 0.32;
+      const angle = -Math.PI / 2 + (Math.random() - 0.5) * spread;
+      const speed = 8.5 + progress * 15.5 + Math.random() * 6.5;
       const vx = Math.cos(angle) * speed;
       const vy = Math.sin(angle) * speed;
-      const colors = ['#ffffff', '#fff3b0', '#ffd700', '#f59e0b', '#ef4444', '#10b981'];
-      const color = colors[Math.floor(Math.random() * colors.length)];
+
+      // Distribution: Blinding white/gold core in the center, saturated rainbow spectrum fanning out
+      let color;
+      let secondaryColor;
+      const isCore = Math.abs(angle + Math.PI / 2) < 0.12 && Math.random() < 0.35;
+
+      if (isCore) {
+        color = '#ffffff';
+        secondaryColor = rainbowColors[Math.floor(Math.random() * rainbowColors.length)];
+      } else {
+        color = rainbowColors[Math.floor(Math.random() * rainbowColors.length)];
+        secondaryColor = rainbowColors[Math.floor(Math.random() * rainbowColors.length)];
+      }
 
       particlesRef.push(
-        new Particle(this.x, this.y - 14, vx, vy, color, {
-          decay: 0.02 + Math.random() * 0.015,
+        new Particle(this.x + (Math.random() - 0.5) * 8, this.y - 38, vx, vy, color, {
+          decay: 0.014 + Math.random() * 0.012,
           friction: 0.965,
           gravity: 0.17,
-          radius: 2.2 + Math.random() * 1.4,
-          maxTrail: 4,
+          radius: 2.2 + Math.random() * 1.8,
+          maxTrail: 5,
           twinkle: true,
+          hasSecondary: Math.random() > 0.55, // Dendritic flower bursts in multi-color
+          secondaryColor,
         })
+      );
+    }
+
+    // Soft smoke rising from base
+    if (Math.random() > 0.6) {
+      particlesRef.push(
+        new Particle(
+          this.x + (Math.random() - 0.5) * 12,
+          this.y - 10,
+          (Math.random() - 0.5) * 0.8,
+          -1.0 - Math.random() * 0.8,
+          '#52525b',
+          {
+            decay: 0.015,
+            friction: 0.97,
+            gravity: -0.015,
+            radius: 4 + Math.random() * 3,
+            twinkle: false,
+          }
+        )
       );
     }
   }
 
   draw(ctx) {
+    ctx.save();
+    const coneH = 38;
+    const baseW = 20;
+
+    // 1. Conical Cardboard Pot Body (Authentic Sivakasi festive packaging as shown in photo)
     ctx.beginPath();
-    ctx.moveTo(this.x, this.y - 14);
-    ctx.lineTo(this.x - 14, this.y + 6);
-    ctx.lineTo(this.x + 14, this.y + 6);
+    ctx.moveTo(this.x, this.y - coneH);
+    ctx.lineTo(this.x - baseW, this.y + 6);
+    ctx.lineTo(this.x + baseW, this.y + 6);
     ctx.closePath();
-    ctx.fillStyle = '#b45309';
+    ctx.fillStyle = '#dc2626'; // Festive Sivakasi Red
     ctx.fill();
 
+    // 2. Decorative Emerald Green & Orange Waves
+    // Green central band with medallion
     ctx.beginPath();
-    ctx.arc(this.x, this.y - 14, 7, 0, Math.PI * 2);
-    ctx.fillStyle = '#ffffff';
-    ctx.shadowColor = '#ffd700';
-    ctx.shadowBlur = 22;
+    ctx.moveTo(this.x - baseW * 0.45, this.y - coneH * 0.45);
+    ctx.lineTo(this.x + baseW * 0.45, this.y - coneH * 0.45);
+    ctx.lineTo(this.x + baseW * 0.72, this.y - coneH * 0.12);
+    ctx.lineTo(this.x - baseW * 0.72, this.y - coneH * 0.12);
+    ctx.closePath();
+    ctx.fillStyle = '#15803d'; // Emerald green
     ctx.fill();
-    ctx.shadowBlur = 0;
+
+    // Golden circular medallion in the middle
+    ctx.beginPath();
+    ctx.arc(this.x, this.y - coneH * 0.28, 5.5, 0, Math.PI * 2);
+    ctx.fillStyle = '#fbbf24';
+    ctx.fill();
+    ctx.strokeStyle = '#b45309';
+    ctx.lineWidth = 1;
+    ctx.stroke();
+
+    // Wavy festive stripes
+    ctx.beginPath();
+    ctx.moveTo(this.x - baseW * 0.78, this.y - 2);
+    ctx.quadraticCurveTo(this.x, this.y - 5, this.x + baseW * 0.78, this.y - 2);
+    ctx.strokeStyle = '#f97316';
+    ctx.lineWidth = 2.5;
+    ctx.stroke();
+
+    // 3. Dark Green Sivakasi Base Band with "FIRE WORKS"
+    ctx.beginPath();
+    ctx.moveTo(this.x - baseW * 0.85, this.y);
+    ctx.lineTo(this.x + baseW * 0.85, this.y);
+    ctx.lineTo(this.x + baseW, this.y + 7);
+    ctx.lineTo(this.x - baseW, this.y + 7);
+    ctx.closePath();
+    ctx.fillStyle = '#14532d';
+    ctx.fill();
+
+    // "FIRE WORKS" lettering in gold
+    ctx.font = 'bold 5px sans-serif';
+    ctx.fillStyle = '#fef08a';
+    ctx.textAlign = 'center';
+    ctx.textBaseline = 'middle';
+    ctx.fillText('FIRE WORKS', this.x, this.y + 4);
+
+    // Bottom base rim ellipse
+    ctx.beginPath();
+    ctx.ellipse(this.x, this.y + 7, baseW, 4.5, 0, 0, Math.PI * 2);
+    ctx.fillStyle = '#991b1b';
+    ctx.fill();
+    ctx.strokeStyle = '#ca8a04';
+    ctx.lineWidth = 1.2;
+    ctx.stroke();
+
+    // 4. Iconic Sivakasi Purple Top Cap (Exact match to uploaded image)
+    const capH = 10;
+    ctx.beginPath();
+    ctx.moveTo(this.x, this.y - coneH);
+    ctx.lineTo(this.x - 6, this.y - coneH + capH);
+    ctx.lineTo(this.x + 6, this.y - coneH + capH);
+    ctx.closePath();
+    ctx.fillStyle = '#7e22ce'; // Authentic Sivakasi Purple cap
+    ctx.fill();
+
+    // Gold collar ring below purple cap
+    ctx.beginPath();
+    ctx.moveTo(this.x - 6.5, this.y - coneH + capH);
+    ctx.lineTo(this.x + 6.5, this.y - coneH + capH);
+    ctx.strokeStyle = '#facc15';
+    ctx.lineWidth = 2;
+    ctx.stroke();
+
+    // 5. Apex Fuse / Roaring Mouth
+    if (this.fuseLife > 0) {
+      // White paper twisted fuse standing at the apex
+      ctx.beginPath();
+      ctx.moveTo(this.x, this.y - coneH);
+      ctx.quadraticCurveTo(this.x + 3, this.y - coneH - 6, this.x + 1, this.y - coneH - 12);
+      ctx.strokeStyle = '#f8fafc';
+      ctx.lineWidth = 2.4;
+      ctx.stroke();
+
+      // Sizzling spark at tip of fuse
+      ctx.beginPath();
+      ctx.arc(this.x + 1, this.y - coneH - 12, 3.5, 0, Math.PI * 2);
+      ctx.fillStyle = '#ffffff';
+      ctx.shadowColor = '#ffd700';
+      ctx.shadowBlur = 15;
+      ctx.fill();
+    } else {
+      // Dynamic multi-color pulsing aura at volcano mouth
+      const auraColors = ['#00e5ff', '#10b981', '#f43f5e', '#a855f7', '#ffd700', '#fb923c'];
+      const auraIdx = Math.floor((this.maxLife - this.life) / 10) % auraColors.length;
+      const currentAura = auraColors[auraIdx];
+
+      ctx.beginPath();
+      ctx.arc(this.x, this.y - coneH, 7.5, 0, Math.PI * 2);
+      ctx.fillStyle = '#ffffff';
+      ctx.shadowColor = currentAura;
+      ctx.shadowBlur = 28;
+      ctx.fill();
+
+      ctx.beginPath();
+      ctx.arc(this.x, this.y - coneH, 15, 0, Math.PI * 2);
+      ctx.fillStyle = currentAura + '44';
+      ctx.fill();
+    }
+
+    ctx.restore();
   }
 }
 

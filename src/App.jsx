@@ -28,7 +28,26 @@ const CRACKERS = [
     id: 'bomb',
     name: 'Unhandled Exception',
     icon: '💣',
-    desc: 'FATAL: NullPointerException! Screen shake, server crash & P1 ticket.',
+    desc: 'FATAL: NullPointerException! Screen shake, server down & P1 incident triggered.',
+  },
+  {
+    id: 'anaar',
+    name: 'Stack Overflow (Anaar)',
+    icon: '🌋',
+    desc: 'Multi-Color Deluxe Fountain! 350px towering rainbow spark shower.',
+  },
+
+  {
+    id: 'anaar',
+    name: 'Stack Overflow (Anaar)',
+    icon: '🌋',
+    desc: 'Sivakasi Conical Flowerpot! 350px towering golden titanium spark fountain.',
+  },
+  {
+    id: 'sparkler',
+    name: 'Live Hotfix (Phuljhadi)',
+    icon: '✨',
+    desc: 'Realistic wire sparkler! Drag finger or mouse to draw sizzling starburst fire.',
   },
   {
     id: 'ladi',
@@ -41,12 +60,6 @@ const CRACKERS = [
     name: 'Microservices',
     icon: '🎯',
     desc: '8 rapid async API tracer comets fired. Hoping at least one returns 200 OK.',
-  },
-  {
-    id: 'sparkler',
-    name: 'Live Hotfix',
-    icon: '✨',
-    desc: 'Drag mouse or finger to draw sizzling golden hotfix fire!',
   },
 ];
 
@@ -169,11 +182,11 @@ export default function App() {
           POV: PROGRAMMER DIWALI <span className="inline-block text-amber-300">💻✨</span>
         </h1>
 
-        {/* Active Cracker Instructions Badge - Tight 4px gap */}
-        <div className="mt-1 pointer-events-auto flex items-center justify-center flex-wrap gap-x-2 gap-y-0.5 px-3 sm:px-4 py-1 rounded-full bg-black/90 border border-amber-400/45 backdrop-blur-md shadow-lg font-mono max-w-[95vw] text-center leading-tight">
+        {/* Active Cracker Instructions Badge - Tight 4px gap matching Image 0 */}
+        <div className="mt-1 pointer-events-auto flex items-center justify-center flex-wrap gap-x-2 gap-y-0.5 px-3.5 sm:px-4 py-1 rounded-full bg-black/90 border border-amber-500/50 backdrop-blur-md shadow-[0_0_20px_rgba(245,158,11,0.25)] font-mono max-w-[95vw] text-center leading-tight">
           <div className="inline-flex items-center gap-1.5 flex-shrink-0">
             <span className="text-sm">{currentCracker.icon}</span>
-            <span className="text-xs sm:text-sm font-bold text-amber-200 whitespace-nowrap">
+            <span className="text-xs sm:text-sm font-bold text-amber-300 whitespace-nowrap">
               {currentCracker.name}:
             </span>
           </div>
