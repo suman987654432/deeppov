@@ -44,9 +44,9 @@ const CRACKERS = [
   },
   {
     id: 'sparkler',
-    name: 'Phuljhadi',
+    name: 'Live Hotfix',
     icon: '✨',
-    desc: 'Drag mouse or finger to draw sizzling golden fire in the air!',
+    desc: 'Drag mouse or finger to draw sizzling golden hotfix fire!',
   },
 ];
 

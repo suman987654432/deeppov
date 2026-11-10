@@ -1222,25 +1222,94 @@ const FireworksCanvas = forwardRef(
           if (cr.isDead) specialCrackersRef.current.splice(i, 1);
         }
 
-        // Hand Sparkler (Phuljhadi)
+        // Hyper-Realistic Hand Sparkler (Phuljhadi with metal wire, ember core, branching starburst needles & smoke)
         if (sparklerPosRef.current) {
           const sp = sparklerPosRef.current;
-          for (let k = 0; k < 6; k++) {
+
+          // 1. Draw Metallic Sparkler Wire Stick & Incandescent Tip
+          ctx.save();
+          // Metal Wire Stick extending diagonally to the bottom-right
+          ctx.beginPath();
+          ctx.moveTo(sp.x + 36, sp.y + 64);
+          ctx.lineTo(sp.x, sp.y);
+          ctx.strokeStyle = '#9ca3af'; // Steel wire
+          ctx.lineWidth = 2.4;
+          ctx.stroke();
+
+          // Dark pyrotechnic chemical coating
+          ctx.beginPath();
+          ctx.moveTo(sp.x + 18, sp.y + 32);
+          ctx.lineTo(sp.x, sp.y);
+          ctx.strokeStyle = '#374151'; // Charcoal chemical coating
+          ctx.lineWidth = 3.8;
+          ctx.stroke();
+
+          // Red-hot burning collar right below flame
+          ctx.beginPath();
+          ctx.moveTo(sp.x + 5, sp.y + 9);
+          ctx.lineTo(sp.x, sp.y);
+          ctx.strokeStyle = '#ff4500';
+          ctx.lineWidth = 4.2;
+          ctx.stroke();
+
+          // 2. White-Hot Burning Combustion Core with Radial Halo
+          const flicker = (Math.random() - 0.5) * 1.5;
+          ctx.beginPath();
+          ctx.arc(sp.x, sp.y, 4 + flicker, 0, Math.PI * 2);
+          ctx.fillStyle = '#ffffff';
+          ctx.shadowColor = '#ff9900';
+          ctx.shadowBlur = 24;
+          ctx.fill();
+
+          ctx.beginPath();
+          ctx.arc(sp.x, sp.y, 8 + flicker * 2, 0, Math.PI * 2);
+          ctx.fillStyle = 'rgba(255, 200, 50, 0.35)';
+          ctx.fill();
+          ctx.restore();
+
+          // 3. Emitter: 18 Branching Starburst Sparks (Dendritic Micro-Explosions)
+          const sparkCount = 18;
+          for (let k = 0; k < sparkCount; k++) {
             const angle = Math.random() * Math.PI * 2;
-            const speed = 1.5 + Math.random() * 4.5;
+            const speed = 3.5 + Math.random() * 8.5;
+            const colors = ['#ffffff', '#ffffff', '#ffd700', '#fff3b0', '#ffea75', '#ff8c00'];
+            const color = colors[Math.floor(Math.random() * colors.length)];
+
             particlesRef.current.push(
               new Particle(
-                sp.x,
-                sp.y,
+                sp.x + (Math.random() - 0.5) * 2,
+                sp.y + (Math.random() - 0.5) * 2,
                 Math.cos(angle) * speed,
                 Math.sin(angle) * speed,
-                ['#ffd700', '#ffffff', '#fbbf24', '#f59e0b'][Math.floor(Math.random() * 4)],
+                color,
                 {
-                  decay: 0.035,
-                  friction: 0.95,
-                  gravity: 0.08,
-                  radius: 1.6,
+                  decay: 0.042 + Math.random() * 0.035,
+                  friction: 0.915,
+                  gravity: 0.09,
+                  radius: 1.8 + Math.random() * 0.8,
+                  maxTrail: 5,
                   twinkle: true,
+                  hasSecondary: Math.random() > 0.45, // 55% sparks split into secondary sparkling needles!
+                }
+              )
+            );
+          }
+
+          // 4. Wispy Rising Smoke Puffs
+          if (Math.random() > 0.45) {
+            particlesRef.current.push(
+              new Particle(
+                sp.x + (Math.random() - 0.5) * 4,
+                sp.y - 2,
+                (Math.random() - 0.5) * 0.7,
+                -1.2 - Math.random() * 0.8,
+                '#52525b',
+                {
+                  decay: 0.018,
+                  friction: 0.97,
+                  gravity: -0.015,
+                  radius: 3.5 + Math.random() * 2.5,
+                  twinkle: false,
                 }
               )
             );
