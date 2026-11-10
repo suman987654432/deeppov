@@ -65,22 +65,25 @@ class Rocket {
   }
 
   draw(ctx) {
+    const rainbowColors = ['#a855f7', '#4f46e5', '#06b6d4', '#22c55e', '#facc15', '#f97316', '#ef4444'];
+    const activeColor = rainbowColors[Math.floor((Date.now() / 70) % 7)];
+
     if (this.trail.length > 1) {
       ctx.beginPath();
       ctx.moveTo(this.trail[0].x, this.trail[0].y);
       for (let i = 1; i < this.trail.length; i++) {
         ctx.lineTo(this.trail[i].x, this.trail[i].y);
       }
-      ctx.strokeStyle = 'rgba(255, 215, 0, 0.85)';
-      ctx.lineWidth = 3.2;
+      ctx.strokeStyle = activeColor;
+      ctx.lineWidth = 3.5;
       ctx.stroke();
     }
 
     ctx.beginPath();
-    ctx.arc(this.x, this.y, 3.8, 0, Math.PI * 2);
-    ctx.fillStyle = this.headColor;
-    ctx.shadowColor = '#ffd700';
-    ctx.shadowBlur = 14;
+    ctx.arc(this.x, this.y, 4.2, 0, Math.PI * 2);
+    ctx.fillStyle = '#ffffff';
+    ctx.shadowColor = activeColor;
+    ctx.shadowBlur = 16;
     ctx.fill();
     ctx.shadowBlur = 0;
   }
@@ -932,31 +935,58 @@ const FireworksCanvas = forwardRef(
       });
     }, []);
 
-    // Regular explosion
+    // 7-Color Rainbow Rocket Explosion (VIBGYOR)
     const detonateFirework = useCallback(
       (x, y, pattern, paletteName) => {
-        const palette = COLOR_PALETTES[paletteName] || COLOR_PALETTES.gold;
-        triggerSkyFlash(x, y, palette[0]);
+        triggerSkyFlash(x, y, '#ffffff', 0.65, 360);
 
         const pan = (x / (window.innerWidth || 1000)) * 2 - 1;
         soundManager.playExplosion(pan);
         triggerHaptic(40);
 
-        const count = 130;
+        // Authentic 7 Colors of the Rainbow: Violet, Indigo, Blue, Green, Yellow, Orange, Red
+        const sevenColors = [
+          '#a855f7', // Violet
+          '#4f46e5', // Indigo
+          '#06b6d4', // Blue / Cyan
+          '#22c55e', // Green
+          '#facc15', // Yellow
+          '#f97316', // Orange
+          '#ef4444', // Red
+        ];
+
+        // 175 particles radiating in symmetric 7-color rainbow petals
+        const count = 175;
         for (let i = 0; i < count; i++) {
-          const angle = Math.random() * Math.PI * 2;
-          const speed = 2.0 + Math.random() * 6.5;
+          const colorIdx = i % 7;
+          const color = sevenColors[colorIdx];
+          const angle = (i / count) * Math.PI * 2 + (Math.random() - 0.5) * 0.12;
+          const speed = 2.4 + (colorIdx / 7) * 4.2 + Math.random() * 2.5;
           const vx = Math.cos(angle) * speed;
           const vy = Math.sin(angle) * speed;
-          const color = palette[Math.floor(Math.random() * palette.length)];
 
           particlesRef.current.push(
             new Particle(x, y, vx, vy, color, {
-              decay: 0.01 + Math.random() * 0.01,
-              friction: 0.97,
-              gravity: 0.06,
-              radius: 2.2,
+              decay: 0.012 + Math.random() * 0.008,
+              friction: 0.968,
+              gravity: 0.055,
+              radius: 2.5,
               maxTrail: 8,
+              twinkle: true,
+            })
+          );
+        }
+
+        // Sparkling bright white core in the center
+        for (let j = 0; j < 28; j++) {
+          const a = Math.random() * Math.PI * 2;
+          const spd = 1.0 + Math.random() * 2.8;
+          particlesRef.current.push(
+            new Particle(x, y, Math.cos(a) * spd, Math.sin(a) * spd, '#ffffff', {
+              decay: 0.035,
+              friction: 0.95,
+              gravity: 0.03,
+              radius: 2.2,
               twinkle: true,
             })
           );

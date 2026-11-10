@@ -8,16 +8,16 @@ import {
   VolumeX,
   Play,
   Pause,
-  Clock
+  Clock,
+  Terminal
 } from 'lucide-react';
 
 const CRACKERS = [
-  { id: 'rocket', name: 'Rocket', icon: '🚀', desc: 'Click/Tap anywhere to shoot aerial rockets' },
-  { id: 'anaar', name: 'Anaar', icon: '🌋', desc: 'Click to place towering golden fountain' },
-  { id: 'chakri', name: 'Chakri', icon: '🌀', desc: 'Click to spin high-speed rainbow wheel' },
-  { id: 'bomb', name: 'Sutli Bomb', icon: '💣', desc: 'Click to plant bomb with shockwave blast' },
-  { id: 'ladi', name: 'Ladi', icon: '💥', desc: 'Click for rapid 28-burst crackling chain' },
-  { id: 'hunter', name: 'Magic Hunter', icon: '🎯', desc: 'Click to shoot 8 rapid colorful comet tracers' },
+  { id: 'rocket', name: 'Deploy to Prod', icon: '🚀', desc: 'Push kiya cloud par, 7-Color Rainbow aatishbaazi 🌈' },
+  { id: 'chakri', name: 'Infinite Loop', icon: '🌀', desc: 'while(true) ghume jaa raha hai 100% CPU par' },
+  { id: 'bomb', name: 'Unhandled Exception', icon: '💣', desc: 'Screen shake + server dead + Jira ticket' },
+  { id: 'ladi', name: 'Merge Conflicts', icon: '💥', desc: '28 commits ek sath line se phat gaye' },
+  { id: 'hunter', name: 'Microservices', icon: '🎯', desc: '8 rapid async requests shoot ho rahe hain' },
 ];
 
 export default function App() {
@@ -99,22 +99,26 @@ export default function App() {
 
       {/* 4. Top Header & Active Cracker Badge */}
       <header className="fixed top-3 left-0 right-0 z-20 flex flex-col items-center pointer-events-none px-4 text-center">
-        <div className="pointer-events-auto flex items-center gap-2 px-3.5 py-1 rounded-full bg-black/60 border border-amber-500/35 backdrop-blur-md text-amber-300 text-[11px] sm:text-xs tracking-widest uppercase mb-1 shadow-[0_0_15px_rgba(245,158,11,0.25)]">
-          <Sparkles className="w-3 h-3 text-amber-400 animate-spin" style={{ animationDuration: '6s' }} />
-          <span>Interactive Diwali Pataakha Arena</span>
+        <div className="pointer-events-auto flex items-center gap-2 px-3.5 py-1 rounded-full bg-black/70 border border-amber-500/40 backdrop-blur-md text-amber-300 text-[11px] sm:text-xs tracking-wider mb-1 shadow-[0_0_15px_rgba(245,158,11,0.25)] font-mono">
+          <Terminal className="w-3.5 h-3.5 text-emerald-400" />
+          <span>status: 200 OK | // zero bugs, only aatishbaazi</span>
         </div>
 
         <h1 className="font-serif text-2xl sm:text-4xl md:text-5xl font-black tracking-wider gold-text-gradient drop-shadow-[0_4px_25px_rgba(0,0,0,0.9)]">
-          DIWALI AATISHBAAZI <span className="inline-block text-amber-300 animate-pulse">✨</span>
+          POV: PROGRAMMER DIWALI <span className="inline-block text-amber-300 animate-bounce">💻✨</span>
         </h1>
 
+        <p className="font-mono text-[11px] sm:text-xs text-amber-200/90 mt-0.5 drop-shadow hidden xs:block">
+          // Friday evening ko bina testing prod deploy maar diya... ab aatishbaazi dekho! 🚀🔥
+        </p>
+
         {/* Active Cracker Instructions Badge */}
-        <div className="mt-1 pointer-events-auto flex items-center gap-2 px-4 py-1.5 rounded-full bg-black/80 border border-amber-400/50 backdrop-blur-lg shadow-lg">
+        <div className="mt-1.5 pointer-events-auto flex items-center gap-2 px-4 py-1.5 rounded-full bg-black/80 border border-amber-400/50 backdrop-blur-lg shadow-lg font-mono">
           <span className="text-base">{currentCracker.icon}</span>
           <span className="text-xs sm:text-sm font-bold text-amber-200">
             {currentCracker.name}:
           </span>
-          <span className="text-xs text-amber-100/80 font-light hidden xs:inline">
+          <span className="text-xs text-amber-100/80 font-light hidden sm:inline">
             {currentCracker.desc}
           </span>
         </div>
@@ -123,12 +127,12 @@ export default function App() {
       {/* 5. Permanent Stable Bottom Control HUD */}
       <div className="fixed bottom-3 sm:bottom-5 left-0 right-0 z-20 flex flex-col items-center pointer-events-none px-2 sm:px-4">
         <div className="pointer-events-auto w-full max-w-2xl bg-black/85 border border-amber-500/40 rounded-3xl p-3 sm:p-4 backdrop-blur-xl shadow-[0_0_50px_rgba(0,0,0,0.9)] flex flex-col gap-2.5">
-          {/* Traditional Cracker Tabs (All 10 Authentic Crackers) */}
+          {/* Traditional Cracker Tabs (Hilarious Programmer Diwali Theme) */}
           <div className="flex items-center gap-1.5 overflow-x-auto pb-1.5 scrollbar-none border-b border-amber-500/20">
-            <span className="text-[11px] font-black text-amber-400/90 uppercase tracking-wider pl-1 pr-1.5 whitespace-nowrap">
-              Pataakha:
+            <span className="text-[11px] font-black text-amber-400/90 uppercase tracking-wider pl-1 pr-1.5 whitespace-nowrap font-mono">
+              Terminal.sh:
             </span>
-            <div className="flex items-center gap-1.5">
+            <div className="flex items-center gap-1.5 font-mono">
               {CRACKERS.map((c) => (
                 <button
                   key={c.id}
@@ -149,13 +153,14 @@ export default function App() {
 
           {/* Action Buttons Row */}
           <div className="flex items-center justify-between gap-2 flex-wrap pt-0.5">
-            {/* Grand Fireworks Finale */}
+            {/* Grand Fireworks Finale -> git push --force 🚀💥 */}
             <button
               onClick={triggerGrandShow}
-              className="btn-gold flex items-center gap-1.5 px-4 sm:px-5 py-2 rounded-full text-xs sm:text-sm font-black tracking-wide uppercase cursor-pointer active:scale-95"
+              className="btn-gold flex items-center gap-1.5 px-4 sm:px-5 py-2 rounded-full text-xs sm:text-sm font-black tracking-wide uppercase cursor-pointer active:scale-95 font-mono shadow-[0_0_20px_rgba(245,158,11,0.5)]"
+              title="Force push to production & explode all servers!"
             >
               <Sparkles className="w-4 h-4 text-amber-950 animate-bounce" />
-              <span>Grand Finale 🎆</span>
+              <span>git push --force 🚀💥</span>
             </button>
 
             <div className="flex items-center gap-1.5">
