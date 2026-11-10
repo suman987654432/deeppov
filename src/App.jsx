@@ -38,12 +38,7 @@ const CRACKERS = [
   },
 
 
-  {
-    id: 'sparkler',
-    name: 'Live Hotfix (Phuljhadi)',
-    icon: '✨',
-    desc: 'Realistic wire sparkler! Drag finger or mouse to draw sizzling starburst fire.',
-  },
+
   {
     id: 'ladi',
     name: 'Merge Conflicts',
