@@ -17,31 +17,31 @@ const CRACKERS = [
     id: 'rocket',
     name: 'Deploy to Prod',
     icon: '🚀',
-    desc: 'Pushed untested code to main on Friday 5 PM. 7-Color Rainbow cloud burst!',
+    desc: 'Pushed to main on Friday 5 PM. 7-Color Rainbow cloud burst!',
   },
   {
     id: 'chakri',
     name: 'Infinite Loop',
     icon: '🌀',
-    desc: 'while(true) spinning CPU at 100%. Cooling fans roaring, rainbow spirals flying!',
+    desc: 'while(true) at 100% CPU. Cooling fans screaming, rainbow spirals flying!',
   },
   {
     id: 'bomb',
     name: 'Unhandled Exception',
     icon: '💣',
-    desc: 'FATAL: NullPointerException! Screen shake, server down & P1 incident triggered.',
+    desc: 'FATAL: NullPointerException! Screen shake, server crash & P1 ticket.',
   },
   {
     id: 'ladi',
     name: 'Merge Conflicts',
     icon: '💥',
-    desc: '<<<<<<< HEAD vs >>>>>>> main: 28 Git conflicts exploding in rapid chain reaction!',
+    desc: '<<<<<<< HEAD vs >>>>>>> main: 28 Git conflicts detonating in chain reaction!',
   },
   {
     id: 'hunter',
     name: 'Microservices',
     icon: '🎯',
-    desc: 'Firing 8 rapid async API tracer comets praying at least one returns 200 OK.',
+    desc: '8 rapid async API tracer comets fired. Hoping at least one returns 200 OK.',
   },
 ];
 
@@ -142,13 +142,15 @@ export default function App() {
           // Deployed untested code directly to production on Friday... watch the servers explode! 🚀🔥
         </p>
 
-        {/* Active Cracker Instructions Badge */}
-        <div className="mt-1 sm:mt-1.5 pointer-events-auto flex items-center gap-2 px-3 sm:px-4 py-1 sm:py-1.5 rounded-full bg-black/85 border border-amber-400/50 backdrop-blur-lg shadow-lg font-mono max-w-[96vw] overflow-hidden">
-          <span className="text-sm sm:text-base flex-shrink-0">{currentCracker.icon}</span>
-          <span className="text-xs sm:text-sm font-bold text-amber-200 flex-shrink-0">
-            {currentCracker.name}:
-          </span>
-          <span className="text-[10px] sm:text-xs text-amber-100/90 font-light truncate">
+        {/* Active Cracker Instructions Badge (Mobile Fully Wrapped & 100% Visible) */}
+        <div className="mt-1 sm:mt-1.5 pointer-events-auto flex items-center justify-center flex-wrap gap-x-2 gap-y-0.5 px-3.5 sm:px-4 py-1.5 rounded-2xl sm:rounded-full bg-black/85 border border-amber-400/50 backdrop-blur-lg shadow-lg font-mono max-w-[94vw] text-center leading-snug">
+          <div className="inline-flex items-center gap-1.5 flex-shrink-0">
+            <span className="text-sm sm:text-base">{currentCracker.icon}</span>
+            <span className="text-xs sm:text-sm font-bold text-amber-200 whitespace-nowrap">
+              {currentCracker.name}:
+            </span>
+          </div>
+          <span className="text-[11px] sm:text-xs text-amber-100/90 font-light">
             {currentCracker.desc}
           </span>
         </div>
