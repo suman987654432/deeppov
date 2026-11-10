@@ -8,8 +8,7 @@ import {
   VolumeX,
   Play,
   Pause,
-  Clock,
-  Terminal
+  Clock
 } from 'lucide-react';
 
 const CRACKERS = [
@@ -129,21 +128,12 @@ export default function App() {
 
       {/* 4. Top Header & Active Cracker Badge */}
       <header className="fixed top-2 sm:top-3 left-0 right-0 z-20 flex flex-col items-center pointer-events-none px-2 sm:px-4 text-center pt-[env(safe-area-inset-top,0px)]">
-        <div className="pointer-events-auto flex items-center gap-1.5 px-3 py-0.5 sm:py-1 rounded-full bg-black/75 border border-amber-500/40 backdrop-blur-md text-amber-300 text-[10px] sm:text-xs tracking-wider mb-1 shadow-[0_0_15px_rgba(245,158,11,0.25)] font-mono">
-          <Terminal className="w-3 h-3 text-emerald-400" />
-          <span>status: 200 OK | // zero bugs, only pure fireworks</span>
-        </div>
-
-        <h1 className="font-serif text-xl sm:text-3xl md:text-5xl font-black tracking-wider gold-text-gradient drop-shadow-[0_4px_25px_rgba(0,0,0,0.9)]">
+        <h1 className="font-serif text-xl sm:text-2xl md:text-3xl font-black tracking-wider gold-text-gradient drop-shadow-[0_4px_25px_rgba(0,0,0,0.9)] leading-tight">
           POV: PROGRAMMER DIWALI <span className="inline-block text-amber-300 animate-bounce">💻✨</span>
         </h1>
 
-        <p className="font-mono text-[10px] sm:text-xs text-amber-200/90 mt-0.5 drop-shadow hidden xs:block">
-          // Deployed untested code directly to production on Friday... watch the servers explode! 🚀🔥
-        </p>
-
-        {/* Active Cracker Instructions Badge (Mobile Fully Wrapped & 100% Visible) */}
-        <div className="mt-1 sm:mt-1.5 pointer-events-auto flex items-center justify-center flex-wrap gap-x-2 gap-y-0.5 px-3.5 sm:px-4 py-1.5 rounded-2xl sm:rounded-full bg-black/85 border border-amber-400/50 backdrop-blur-lg shadow-lg font-mono max-w-[94vw] text-center leading-snug">
+        {/* Active Cracker Instructions Badge (Tight gap & fully visible) */}
+        <div className="mt-1 pointer-events-auto flex items-center justify-center flex-wrap gap-x-2 gap-y-0.5 px-3.5 sm:px-4 py-1.5 rounded-2xl sm:rounded-full bg-black/85 border border-amber-400/50 backdrop-blur-lg shadow-lg font-mono max-w-[94vw] text-center leading-snug">
           <div className="inline-flex items-center gap-1.5 flex-shrink-0">
             <span className="text-sm sm:text-base">{currentCracker.icon}</span>
             <span className="text-xs sm:text-sm font-bold text-amber-200 whitespace-nowrap">
